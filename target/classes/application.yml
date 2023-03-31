@@ -1,0 +1,28 @@
+application:
+  title: "Alien Supremacy"
+  version: 0.1
+  formatted-version: v0.1 Alpha
+
+server:
+  error:
+    whitelabel:
+      enabled: false
+    path: /error
+
+spring:
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true 
+      jakarta:
+        persistence:
+          sharedCache:
+            mode: ALL # https://github.com/spring-projects/spring-data-jpa/issues/2717
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306
+    username: root
+    password: rootroot
+  thymeleaf:
+    check-template-location: false
