@@ -3,11 +3,11 @@
   * Usar este módulo para instanciar lineas en el escenario.
   */
 
-import * as THREE from './js/libs/three.module.js';
+import * as THREE from '/proyecto-fin-ciclo/js/libs/three.module.js';
 
-import * as graphics from './js/graphics/graphics.js';
+import * as graphics from '/proyecto-fin-ciclo/js/graphics/graphics.js';
 
-import * as galaxy from './js/game/scene/galaxy.js';
+import * as galaxy from '/proyecto-fin-ciclo/js/game/scene/galaxy.js';
 
 /** Material de las líneas. */
 let material;

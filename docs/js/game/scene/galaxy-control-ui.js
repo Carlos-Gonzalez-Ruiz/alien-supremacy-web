@@ -2,16 +2,16 @@
   * Módulo de interfaz de usuario DOM de control de galaxia.
   */
 
-import * as domUi from './js/dom-ui/dom-ui.js';
+import * as domUi from '/proyecto-fin-ciclo/js/dom-ui/dom-ui.js';
 
-import * as gameConstants from './js/constants/game-constants.js';
+import * as gameConstants from '/proyecto-fin-ciclo/js/constants/game-constants.js';
 
-import * as graphics from './js/graphics/graphics.js';
+import * as graphics from '/proyecto-fin-ciclo/js/graphics/graphics.js';
 
-import * as game from './js/game/game.js';
+import * as game from '/proyecto-fin-ciclo/js/game/game.js';
 
-import * as galaxy from './js/game/scene/galaxy.js';
-import * as galaxyControl from './js/game/scene/galaxy-control.js';
+import * as galaxy from '/proyecto-fin-ciclo/js/game/scene/galaxy.js';
+import * as galaxyControl from '/proyecto-fin-ciclo/js/game/scene/galaxy-control.js';
 
 /** Lista de elementos. */
 let elements = [];

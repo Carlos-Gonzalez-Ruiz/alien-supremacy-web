@@ -3,11 +3,11 @@
   * Usar https://www.toptal.com/developers/keycode, para más información sobre la nomenclatura de las teclas.
   */
 
-import * as keyboardConstants from './js/constants/keyboard-constants.js';
+import * as keyboardConstants from '/proyecto-fin-ciclo/js/constants/keyboard-constants.js';
 
-import * as domUi from './js/dom-ui/dom-ui.js';
-import * as graphics from './js/graphics/graphics.js';
-import * as game from './js/game/game.js';
+import * as domUi from '/proyecto-fin-ciclo/js/dom-ui/dom-ui.js';
+import * as graphics from '/proyecto-fin-ciclo/js/graphics/graphics.js';
+import * as game from '/proyecto-fin-ciclo/js/game/game.js';
 
 /** Estado de las teclas. */
 let pressed = {};
