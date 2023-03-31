@@ -2,9 +2,9 @@
   * Módulo de gestión de gráficos.
   */
 
-import * as THREE from '/js/libs/three.module.js';
+import * as THREE from './js/libs/three.module.js';
 
-import * as game from '/js/game/game.js';
+import * as game from './js/game/game.js';
 
 /** Relación de aspecto. */
 export let aspectRatio = 1;

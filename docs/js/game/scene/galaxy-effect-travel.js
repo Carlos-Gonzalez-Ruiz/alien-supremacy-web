@@ -2,12 +2,12 @@
   * Módulo para el mostrado de efecto de viaje entre estrellas.
   */
 
-import * as THREE from '/js/libs/three.module.js';
+import * as THREE from './js/libs/three.module.js';
 
-import * as graphics from '/js/graphics/graphics.js';
+import * as graphics from './js/graphics/graphics.js';
 
-import * as galaxy from '/js/game/scene/galaxy.js';
-import * as galaxyControl from '/js/game/scene/galaxy-control.js';
+import * as galaxy from './js/game/scene/galaxy.js';
+import * as galaxyControl from './js/game/scene/galaxy-control.js';
 
 /** Material de las líneas.  */
 let lineMaterial;

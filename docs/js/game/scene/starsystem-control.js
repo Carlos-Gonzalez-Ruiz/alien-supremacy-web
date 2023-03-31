@@ -2,21 +2,21 @@
   * Módulo de control de sistema estelar.
   */
 
-import * as THREE from '/js/libs/three.module.js';
+import * as THREE from './js/libs/three.module.js';
 
-import * as gameConstants from '/js/constants/game-constants.js';
-import * as keyboardConstants from '/js/constants/keyboard-constants.js';
+import * as gameConstants from './js/constants/game-constants.js';
+import * as keyboardConstants from './js/constants/keyboard-constants.js';
 
-import * as graphics from '/js/graphics/graphics.js';
-import * as keyboard from '/js/keyboard/keyboard.js';
+import * as graphics from './js/graphics/graphics.js';
+import * as keyboard from './js/keyboard/keyboard.js';
 
-import * as game from '/js/game/game.js';
+import * as game from './js/game/game.js';
 
-import * as galaxyControl from '/js/game/scene/galaxy-control.js'
-import * as galaxyControlUi from '/js/game/scene/galaxy-control-ui.js';
+import * as galaxyControl from './js/game/scene/galaxy-control.js'
+import * as galaxyControlUi from './js/game/scene/galaxy-control-ui.js';
 
-import * as starSystem from '/js/game/scene/starsystem.js';
-import * as starSystemControlUi from '/js/game/scene/starsystem-control-ui.js';
+import * as starSystem from './js/game/scene/starsystem.js';
+import * as starSystemControlUi from './js/game/scene/starsystem-control-ui.js';
 
 /** Raycaster. */
 let raycaster;

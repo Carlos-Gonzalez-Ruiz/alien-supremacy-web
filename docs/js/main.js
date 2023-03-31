@@ -2,10 +2,10 @@
   * Módulo main de la aplicación.
   */
 
-import * as domUi from '/js/dom-ui/dom-ui.js';
-import * as graphics from '/js/graphics/graphics.js';
-import * as keyboard from '/js/keyboard/keyboard.js';
-import * as game from '/js/game/game.js';
+import * as domUi from './js/dom-ui/dom-ui.js';
+import * as graphics from './js/graphics/graphics.js';
+import * as keyboard from './js/keyboard/keyboard.js';
+import * as game from './js/game/game.js';
 
 /**
   * Función de inicialización del main.

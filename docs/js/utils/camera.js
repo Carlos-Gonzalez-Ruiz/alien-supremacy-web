@@ -2,12 +2,12 @@
   * Módulo para un movimiento básico de cámara.
   */
 
-import * as THREE from '/js/libs/three.module.js';
+import * as THREE from './js/libs/three.module.js';
 
-import * as keyboardConstants from '/js/constants/keyboard-constants.js';
+import * as keyboardConstants from './js/constants/keyboard-constants.js';
 
-import * as graphics from '/js/graphics/graphics.js';
-import * as keyboard from '/js/keyboard/keyboard.js';
+import * as graphics from './js/graphics/graphics.js';
+import * as keyboard from './js/keyboard/keyboard.js';
 
 /** Velocidad de la cámara. */
 let speed = 1;

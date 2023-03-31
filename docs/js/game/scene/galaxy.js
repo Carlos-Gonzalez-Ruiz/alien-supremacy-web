@@ -2,13 +2,13 @@
   * Módulo para el mostrado de la escena de galaxia.
   */
 
-import * as THREE from '/js/libs/three.module.js';
+import * as THREE from './js/libs/three.module.js';
 
-import * as graphics from '/js/graphics/graphics.js';
-import * as keyboard from '/js/keyboard/keyboard.js';
+import * as graphics from './js/graphics/graphics.js';
+import * as keyboard from './js/keyboard/keyboard.js';
 
-import * as galaxyControl from '/js/game/scene/galaxy-control.js'
-import * as galaxyEffectTravel from '/js/game/scene/galaxy-effect-travel.js'
+import * as galaxyControl from './js/game/scene/galaxy-control.js'
+import * as galaxyEffectTravel from './js/game/scene/galaxy-effect-travel.js'
 
 /** Vista de renderizado del módulo. */
 export let view;
@@ -69,14 +69,14 @@ export function init() {
 function initStars() {
 	// Texturas.
 	{
-		let texture = new THREE.TextureLoader().load('/image/flarehd.png');
+		let texture = new THREE.TextureLoader().load('./image/flarehd.png');
 		texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;
 		texture.minFilter = texture.magFilter = graphics.filtering;
 		
 		starTextures.push(texture);
 	}
 	{
-		let texture = new THREE.TextureLoader().load('/image/flare2hd.png');
+		let texture = new THREE.TextureLoader().load('./image/flare2hd.png');
 		texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;
 		texture.minFilter = texture.magFilter = graphics.filtering;
 		
@@ -237,21 +237,21 @@ function initStars() {
 function initDust() {
 	// Texturas.
 	{
-		let texture = new THREE.TextureLoader().load('/image/dust0.png');
+		let texture = new THREE.TextureLoader().load('./image/dust0.png');
 		texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;
 		texture.minFilter = texture.magFilter = graphics.filtering;
 		
 		dustTextures.push(texture);
 	}
 	{
-		let texture = new THREE.TextureLoader().load('/image/dust1.png');
+		let texture = new THREE.TextureLoader().load('./image/dust1.png');
 		texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;
 		texture.minFilter = texture.magFilter = graphics.filtering;
 		
 		dustTextures.push(texture);
 	}
 	{
-		let texture = new THREE.TextureLoader().load('/image/dust2.png');
+		let texture = new THREE.TextureLoader().load('./image/dust2.png');
 		texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;
 		texture.minFilter = texture.magFilter = THREE.NearestFilter;
 		

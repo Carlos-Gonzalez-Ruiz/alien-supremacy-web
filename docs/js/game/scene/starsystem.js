@@ -2,14 +2,14 @@
   * Módulo para el mostrado de la escena de un sistema estelar.
   */
 
-import * as THREE from '/js/libs/three.module.js';
-import * as perlin from '/js/libs/perlin.js';
+import * as THREE from './js/libs/three.module.js';
+import * as perlin from './js/libs/perlin.js';
 
-import * as graphics from '/js/graphics/graphics.js';
-import * as keyboard from '/js/keyboard/keyboard.js';
-import * as random from '/js/random/random.js';
+import * as graphics from './js/graphics/graphics.js';
+import * as keyboard from './js/keyboard/keyboard.js';
+import * as random from './js/random/random.js';
 
-import * as starSystemControl from '/js/game/scene/starsystem-control.js'
+import * as starSystemControl from './js/game/scene/starsystem-control.js'
 
 /** Vista de renderizado del módulo. */
 export let view;
@@ -165,7 +165,7 @@ export function init() {
 function initResources() {
 	/// Texturas.
 	for (let i = 0; i < STAR_TEXTURES; ++i) {
-		let texture = new THREE.TextureLoader().load('/image/star-system/star' + i + '.png');
+		let texture = new THREE.TextureLoader().load('./image/star-system/star' + i + '.png');
 		texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;
 		texture.minFilter = texture.magFilter = graphics.filtering;
 		planetStarTextures.push(texture);
@@ -173,58 +173,58 @@ function initResources() {
 	
 	for (let i = 0; i < PLANET_TEXTURES; ++i) {
 		{
-			let texture = new THREE.TextureLoader().load('/image/star-system/dirt' + i + '.png');
+			let texture = new THREE.TextureLoader().load('./image/star-system/dirt' + i + '.png');
 			texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;
 			texture.minFilter = texture.magFilter = graphics.filtering;
 			planetDirtTextures.push(texture);
 		}
 		{
-			let texture = new THREE.TextureLoader().load('/image/star-system/water' + i + '.png');
+			let texture = new THREE.TextureLoader().load('./image/star-system/water' + i + '.png');
 			texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;
 			texture.minFilter = texture.magFilter = graphics.filtering;
 			planetWaterTextures.push(texture);
 		}
 		{
-			let texture = new THREE.TextureLoader().load('/image/star-system/alien' + i + '.png');
+			let texture = new THREE.TextureLoader().load('./image/star-system/alien' + i + '.png');
 			texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;
 			texture.minFilter = texture.magFilter = graphics.filtering;
 			planetAlienTextures.push(texture);
 		}
 	}
 	for (let i = 0; i < CLOUD_TEXTURES; ++i) {
-		let texture = new THREE.TextureLoader().load('/image/star-system/cloud' + i + '.png');
+		let texture = new THREE.TextureLoader().load('./image/star-system/cloud' + i + '.png');
 		texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;
 		texture.minFilter = texture.magFilter = graphics.filtering;
 		planetCloudTextures.push(texture);
 	}
 	for (let i = 0; i < NORMAL_TEXTURES; ++i) {
 		{
-			let texture = new THREE.TextureLoader().load('/image/star-system/normals/normal-dirt' + i + '.png');
+			let texture = new THREE.TextureLoader().load('./image/star-system/normals/normal-dirt' + i + '.png');
 			texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;
 			texture.minFilter = texture.magFilter = graphics.filtering;
 			planetDirtNormals.push(texture);
 		}
 		{
-			let texture = new THREE.TextureLoader().load('/image/star-system/normals/normal-water' + i + '.png');
+			let texture = new THREE.TextureLoader().load('./image/star-system/normals/normal-water' + i + '.png');
 			texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;
 			texture.minFilter = texture.magFilter = graphics.filtering;
 			planetWaterNormals.push(texture);
 		}
 		{
-			let texture = new THREE.TextureLoader().load('/image/star-system/normals/normal-alien' + i + '.png');
+			let texture = new THREE.TextureLoader().load('./image/star-system/normals/normal-alien' + i + '.png');
 			texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;
 			texture.minFilter = texture.magFilter = graphics.filtering;
 			planetAlienNormals.push(texture);
 		}
 	}
 	for (let i = 0; i < NORMAL_CLOUD_TEXTURES; ++i) {
-		let texture = new THREE.TextureLoader().load('/image/star-system/normals/normal-cloud' + i + '.png');
+		let texture = new THREE.TextureLoader().load('./image/star-system/normals/normal-cloud' + i + '.png');
 		texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;
 		texture.minFilter = texture.magFilter = graphics.filtering;
 		planetCloudNormals.push(texture);
 	}
 	
-	planetCraterNormal = new THREE.TextureLoader().load('/image/star-system/normals/normal-crater.png');
+	planetCraterNormal = new THREE.TextureLoader().load('./image/star-system/normals/normal-crater.png');
 	planetCraterNormal.wrapS = planetCraterNormal.wrapT = THREE.ClampToEdgeWrapping;
 	planetCraterNormal.minFilter = planetCraterNormal.magFilter = graphics.filtering;
 	

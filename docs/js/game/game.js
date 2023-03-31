@@ -3,21 +3,21 @@
   * Este módulo se encarga de procesar cada instancia de la escena.
   */
 
-import * as THREE from '/js/libs/three.module.js';
+import * as THREE from './js/libs/three.module.js';
 
-import * as gameConstants from '/js/constants/game-constants.js';
+import * as gameConstants from './js/constants/game-constants.js';
 
-import * as graphics from '/js/graphics/graphics.js';
+import * as graphics from './js/graphics/graphics.js';
 
-import * as line from '/js/game/line.js';
+import * as line from './js/game/line.js';
 
-import * as universe from '/js/game/scene/universe.js';
-import * as galaxy from '/js/game/scene/galaxy.js';
-import * as galaxyControl from '/js/game/scene/galaxy-control.js'
-import * as galaxyControlUi from '/js/game/scene/galaxy-control-ui.js'
-import * as starSystem from '/js/game/scene/starsystem.js';
-import * as starSystemControl from '/js/game/scene/starsystem-control.js'
-import * as starSystemControlUi from '/js/game/scene/starsystem-control-ui.js'
+import * as universe from './js/game/scene/universe.js';
+import * as galaxy from './js/game/scene/galaxy.js';
+import * as galaxyControl from './js/game/scene/galaxy-control.js'
+import * as galaxyControlUi from './js/game/scene/galaxy-control-ui.js'
+import * as starSystem from './js/game/scene/starsystem.js';
+import * as starSystemControl from './js/game/scene/starsystem-control.js'
+import * as starSystemControlUi from './js/game/scene/starsystem-control-ui.js'
 
 /** Nivel de vista. */
 export let viewLevel = gameConstants.VIEW_LEVEL_GALAXY;
