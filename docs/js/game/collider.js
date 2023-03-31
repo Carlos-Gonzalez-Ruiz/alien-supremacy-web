@@ -2,10 +2,10 @@
   * Módulo de collider.
   * Este módullo guardará la información sobre todos los collider para que el jugador pueda hacer uso de ellos.
   */
-import * as THREE from '/js/libs/three.module.js';
-import * as graphics from '/js/graphics/graphics.js';
+import * as THREE from '/proyecto-fin-ciclo/js/libs/three.module.js';
+import * as graphics from '/proyecto-fin-ciclo/js/graphics/graphics.js';
 
-import * as player from '/js/game/player.js';
+import * as player from '/proyecto-fin-ciclo/js/game/player.js';
 
 /** Array con los colliders. */
 export let colliders = [];
@@ -16,7 +16,7 @@ export let colliders = [];
   * @param geometry el geometry de colisión.
   */
 export function add(mesh, geometry, rotX, rotY, rotZ, scaleX, scaleY, scaleZ) {
-	let texture = new THREE.TextureLoader().load('/image/aliensand.png');
+	let texture = new THREE.TextureLoader().load('/proyecto-fin-ciclo/image/aliensand.png');
 	texture.minFilter = texture.magFilter = graphics.filtering; 
 	
 	let cubeGeometry = new THREE.BoxGeometry(1, 1, 1);

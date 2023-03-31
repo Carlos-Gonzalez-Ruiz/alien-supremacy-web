@@ -2,24 +2,24 @@
   * Módulo de control de galaxia.
   */
 
-import * as THREE from '/js/libs/three.module.js';
+import * as THREE from '/proyecto-fin-ciclo/js/libs/three.module.js';
 
-import * as gameConstants from '/js/constants/game-constants.js';
-import * as keyboardConstants from '/js/constants/keyboard-constants.js';
+import * as gameConstants from '/proyecto-fin-ciclo/js/constants/game-constants.js';
+import * as keyboardConstants from '/proyecto-fin-ciclo/js/constants/keyboard-constants.js';
 
-import * as graphics from '/js/graphics/graphics.js';
-import * as keyboard from '/js/keyboard/keyboard.js';
+import * as graphics from '/proyecto-fin-ciclo/js/graphics/graphics.js';
+import * as keyboard from '/proyecto-fin-ciclo/js/keyboard/keyboard.js';
 
-import * as game from '/js/game/game.js';
+import * as game from '/proyecto-fin-ciclo/js/game/game.js';
 
-import * as line from '/js/game/line.js';
+import * as line from '/proyecto-fin-ciclo/js/game/line.js';
 
-import * as galaxy from '/js/game/scene/galaxy.js';
-import * as galaxyControlUi from '/js/game/scene/galaxy-control-ui.js';
-import * as galaxyEffectTravel from '/js/game/scene/galaxy-effect-travel.js'
+import * as galaxy from '/proyecto-fin-ciclo/js/game/scene/galaxy.js';
+import * as galaxyControlUi from '/proyecto-fin-ciclo/js/game/scene/galaxy-control-ui.js';
+import * as galaxyEffectTravel from '/proyecto-fin-ciclo/js/game/scene/galaxy-effect-travel.js'
 
-import * as starSystem from '/js/game/scene/starsystem.js';
-import * as starSystemControl from '/js/game/scene/starsystem-control.js';
+import * as starSystem from '/proyecto-fin-ciclo/js/game/scene/starsystem.js';
+import * as starSystemControl from '/proyecto-fin-ciclo/js/game/scene/starsystem-control.js';
 
 /** Raycaster. */
 let raycaster;
@@ -147,7 +147,7 @@ export function init() {
   */
 function initHoverStar() {
 	// Textura.
-	hoverStarTexture = new THREE.TextureLoader().load('/image/round-select.png');
+	hoverStarTexture = new THREE.TextureLoader().load('/proyecto-fin-ciclo/image/round-select.png');
 	hoverStarTexture.wrapS = hoverStarTexture.wrapT = THREE.ClampToEdgeWrapping;
 	hoverStarTexture.minFilter = hoverStarTexture.magFilter = THREE.LinearFilter;
 	
@@ -176,7 +176,7 @@ function initHoverStar() {
   */
 function initSelectedStar() {
 	// Textura.
-	selectedStarTexture = new THREE.TextureLoader().load('/image/round-select.png');
+	selectedStarTexture = new THREE.TextureLoader().load('/proyecto-fin-ciclo/image/round-select.png');
 	selectedStarTexture.wrapS = selectedStarTexture.wrapT = THREE.ClampToEdgeWrapping;
 	selectedStarTexture.minFilter = selectedStarTexture.magFilter = THREE.LinearFilter;
 	
@@ -205,7 +205,7 @@ function initSelectedStar() {
   */
 function initPointer() {
 	// Textura.
-	pointerTexture = new THREE.TextureLoader().load('/image/galaxy-pointer.png');
+	pointerTexture = new THREE.TextureLoader().load('/proyecto-fin-ciclo/image/galaxy-pointer.png');
 	pointerTexture.wrapS = pointerTexture.wrapT = THREE.ClampToEdgeWrapping;
 	pointerTexture.minFilter = pointerTexture.magFilter = THREE.LinearFilter;
 	

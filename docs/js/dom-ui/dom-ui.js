@@ -2,7 +2,7 @@
   * Módulo para añadir elementos a una interfaz gráfica usando el DOM.
   */
 
-import * as game from '/js/game/game.js';
+import * as game from '/proyecto-fin-ciclo/js/game/game.js';
 
 /** Contenedor de interfaz. */
 export let div;

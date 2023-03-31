@@ -3,9 +3,9 @@
   * El universo es el skybox de galaxia.
   */
 
-import * as THREE from '/js/libs/three.module.js';
+import * as THREE from '/proyecto-fin-ciclo/js/libs/three.module.js';
 
-import * as graphics from '/js/graphics/graphics.js';
+import * as graphics from '/proyecto-fin-ciclo/js/graphics/graphics.js';
 
 /** Vista de renderizado del módulo. */
 export let view;
@@ -45,14 +45,14 @@ export function init() {
 function initGalaxies() {
 	// Texturas.
 	{
-		let texture = new THREE.TextureLoader().load('/image/flarehd.png');
+		let texture = new THREE.TextureLoader().load('/proyecto-fin-ciclo/image/flarehd.png');
 		texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;
 		texture.minFilter = texture.magFilter = graphics.filtering;
 		
 		galaxyTextures.push(texture);
 	}
 	{
-		let texture = new THREE.TextureLoader().load('/image/flare2hd.png');
+		let texture = new THREE.TextureLoader().load('/proyecto-fin-ciclo/image/flare2hd.png');
 		texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;
 		texture.minFilter = texture.magFilter = graphics.filtering;
 		
@@ -164,7 +164,7 @@ function initGalaxies() {
   */
 function initDust() {
 	// Textura.
-	dustTexture = new THREE.TextureLoader().load('/image/dust1.png');
+	dustTexture = new THREE.TextureLoader().load('/proyecto-fin-ciclo/image/dust1.png');
 	dustTexture.wrapS = dustTexture.wrapT = THREE.ClampToEdgeWrapping;
 	dustTexture.minFilter = dustTexture.magFilter = graphics.filtering;
 	

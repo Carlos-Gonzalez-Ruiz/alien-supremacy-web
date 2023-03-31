@@ -2,7 +2,7 @@
   * Punto de entrada.
   */
 
-import * as main from '/js/main.js';
+import * as main from '/proyecto-fin-ciclo/js/main.js';
 
 // Inicar main.
 main.init();
@@ -21,7 +21,7 @@ document.body.appendChild(renderer.domElement);
 
 
 function create() {
-	let texture = new THREE.TextureLoader().load('/image/water.png');
+	let texture = new THREE.TextureLoader().load('/proyecto-fin-ciclo/image/water.png');
 	texture.minFilter = texture.magFilter = THREE.NearestFilter; // THREE.LinearFilter
 	
 	// Sin instancing
