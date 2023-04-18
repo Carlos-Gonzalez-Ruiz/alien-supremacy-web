@@ -11,6 +11,7 @@ import * as graphics from '/js/graphics/graphics.js';
 import * as keyboard from '/js/keyboard/keyboard.js';
 
 import * as game from '/js/game/game.js';
+import * as gameControl from '/js/game/game-control.js';
 
 import * as galaxyControl from '/js/game/scene/galaxy-control.js'
 import * as galaxyControlUi from '/js/game/scene/galaxy-control-ui.js';
@@ -22,6 +23,31 @@ import * as starSystemControlUi from '/js/game/scene/starsystem-control-ui.js';
 let raycaster;
 /** Pointer del raycaster. */
 let raycasterPointer = new THREE.Vector2(0, 0);
+
+/** Planeta dónde se ha posado el ratón. */
+export let hoveredPlanet = -1;
+/** Planeta seleccionada. */
+export let selectedPlanet = -1;
+/** Posición del planeta seleccionada anteriormente. (para actualizado de la UI) */
+let selectedPlanetPrevPos = new THREE.Vector3();
+
+/** Textura de apuntado. */
+let hoverPlanetTexture;
+/** Material de apuntado. */
+let hoverPlanetMaterial;
+/** Geometry de apuntado. */
+let hoverPlanetGeometry;
+/** Mesh de apuntado. */
+export let hoverPlanetMesh;
+
+/** Textura de selección. */
+let selectedPlanetTexture;
+/** Material de selección. */
+let selectedPlanetMaterial;
+/** Geometry de selección. */
+let selectedPlanetGeometry;
+/** Mesh de selección. */
+export let selectedPlanetMesh;
 
 /** Posición X. */
 export let posX = 0;
@@ -81,7 +107,68 @@ export function init() {
 	raycaster = new THREE.Raycaster();
 	raycaster.params.Points.threshold = 0.5;
 	
+	initHoverPlanet();
+	initSelectedPlanet();
+	
 	starSystemControlUi.init();
+}
+
+/**
+  * Función de inicialización de apuntado.
+  */
+function initHoverPlanet() {
+	// Textura.
+	hoverPlanetTexture = new THREE.TextureLoader().load('/image/round-select.png');
+	hoverPlanetTexture.wrapS = hoverPlanetTexture.wrapT = THREE.ClampToEdgeWrapping;
+	hoverPlanetTexture.minFilter = hoverPlanetTexture.magFilter = THREE.LinearFilter;
+	
+	// Material.
+	hoverPlanetMaterial = new THREE.PointsMaterial(
+		{
+			color: 0xCCCCCC,
+			map: hoverPlanetTexture,
+			blending: THREE.AdditiveBlending,
+			depthTest: false,
+			transparent: true
+		}
+	);
+	// Geometría.
+	hoverPlanetGeometry = new THREE.BufferGeometry();
+	hoverPlanetGeometry.setAttribute('position', new THREE.Float32BufferAttribute([0, 0, 0], 3));
+	// Mesh.
+	hoverPlanetMesh = new THREE.Points(hoverPlanetGeometry, hoverPlanetMaterial);
+	
+	// Añadir a la escena.
+	starSystem.view.scene.add(hoverPlanetMesh);
+}
+
+/**
+  * Función de inicialización de selección.
+  */
+function initSelectedPlanet() {
+	// Textura.
+	selectedPlanetTexture = new THREE.TextureLoader().load('/image/round-select.png');
+	selectedPlanetTexture.wrapS = selectedPlanetTexture.wrapT = THREE.ClampToEdgeWrapping;
+	selectedPlanetTexture.minFilter = selectedPlanetTexture.magFilter = THREE.LinearFilter;
+	
+	// Material.
+	selectedPlanetMaterial = new THREE.PointsMaterial(
+		{
+			color: 0xFFFFFF,
+			map: selectedPlanetTexture,
+			blending: THREE.AdditiveBlending,
+			depthTest: false,
+			transparent: true
+		}
+	);
+	// Geometría.
+	selectedPlanetGeometry = new THREE.BufferGeometry();
+	selectedPlanetGeometry.setAttribute('position', new THREE.Float32BufferAttribute([0, 0, 0], 3));
+	// Mesh.
+	selectedPlanetMesh = new THREE.Points(selectedPlanetGeometry, selectedPlanetMaterial);
+	
+	// Añadir a la escena.
+	starSystem.view.scene.add(selectedPlanetMesh);
 }
 
 /**
@@ -298,8 +385,73 @@ function camera() {
   * Función para todo lo relativo a temas de interfaz de usuario de manera general.
   */
 function userInterface() {
+	// Función para cuando ocurra una intersección-
+	function intersectionOccurs(index) {
+		// Establecer tamaño de selección.
+		hoverPlanetMaterial.size = starSystem.collisionMeshes[index].scale.x * 2.3;
+		
+		hoverPlanetMesh.visible = true;
+		hoverPlanetMesh.position.x = starSystem.collisionMeshes[index].position.x;
+		hoverPlanetMesh.position.y = starSystem.collisionMeshes[index].position.y;
+		hoverPlanetMesh.position.z = starSystem.collisionMeshes[index].position.z;
+		
+		// Mostrar datos de estrella.
+		if (selectedPlanet != index) {
+			starSystemControlUi.displayPlanetHoveredBox();
+			
+			hoveredPlanet = index;
+		}
+		
+		// Seleccionar estrella.
+		if (galaxyControl.hoveredStar == -1 && galaxyControl.selectedStar == -1 && keyboard.checkMouseButtonPressedOnce(keyboardConstants.MB_LEFT)) {
+			if (selectedPlanet != index) {
+				// Establecer tamaño de selección.
+				selectedPlanetMaterial.size = starSystem.collisionMeshes[index].scale.x * 2.3;
+				
+				selectedPlanetMesh.visible = true;
+				selectedPlanetMesh.position.x = starSystem.collisionMeshes[index].position.x;
+				selectedPlanetMesh.position.y = starSystem.collisionMeshes[index].position.y;
+				selectedPlanetMesh.position.z = starSystem.collisionMeshes[index].position.z;
+				
+				// Dejar de mostrar caja de posar sobre estrella.
+				hoveredPlanet = -1;
+				starSystemControlUi.hidePlanetHoveredBox();
+				
+				// Mostrar caja de selección.
+				starSystemControlUi.displayPlanetSelectedBox();
+				
+				selectedPlanet = index;
+			} else {
+				// Deseleccionar al hacer click otra vez.
+				selectedPlanetMesh.visible = false;
+				
+				selectedPlanet = -1;
+				starSystemControlUi.hidePlanetSelectedBox();
+			}
+		}
+	}
+	
+	// Función para cuando no ocurra una intersección-
+	function noIntersectionOccurs() {
+		hoverPlanetMesh.visible = false;
+		
+		// Dejar de mostrar datos de estrella.
+		if (hoveredPlanet != -1) {
+			hoveredPlanet = -1;
+			starSystemControlUi.hidePlanetHoveredBox();
+		}
+		
+		// Deseleccionar estrella.
+		if (keyboard.checkMouseButtonPressedOnce(keyboardConstants.MB_LEFT) && selectedPlanet != -1) {
+			selectedPlanetMesh.visible = false;
+			
+			selectedPlanet = -1;
+			starSystemControlUi.hidePlanetSelectedBox();
+		}
+	}
+	
 	// Comprobar intersecciones.
-	let maxDistance = 100;
+	let maxDistance = 5000;
 	let timeRate = 200;
 	
 	if (Math.floor(Date.now() / timeRate) % 1 == 0) {
@@ -308,9 +460,45 @@ function userInterface() {
 		raycaster.setFromCamera(raycasterPointer, starSystem.view.camera);
 		raycaster.far = maxDistance;
 		
-		/*let intersections = raycaster.intersectObjects(, false);
-		if (intersections.length > 0) {
-		}*/
+		let intersections = raycaster.intersectObjects(starSystem.groupCollision.children, true);
+		if (!gameControl.selecting && galaxyControl.hoveredStar == -1 && galaxyControl.selectedStar == -1 && intersections.length > 0) {
+			let index = intersections[0].object.name;
+			
+			if (index != null) {
+				intersectionOccurs(index);
+			} else {
+				noIntersectionOccurs();
+			}
+		} else {
+			noIntersectionOccurs();
+		}
+	}
+	
+	// Actalizar posción de la estrella de selección.
+	if (selectedPlanet != -1 && selectedPlanetMesh.visible) {
+		let vertex = starSystem.collisionMeshes[selectedPlanet].position;
+		
+		// Actualizar UI en caso de movimiento.
+		let accuracy = 100; // Hacer que sea más insensible al movimiento.
+		
+		let positionX = Math.floor(vertex.x * accuracy);
+		let positionY = Math.floor(vertex.y * accuracy);
+		let positionZ = Math.floor(vertex.z * accuracy);
+		
+		if (selectedPlanetPrevPos.x != positionX || selectedPlanetPrevPos.y != positionY || selectedPlanetPrevPos.z != positionZ) {
+			// Actualizar cámara.
+			cameraOnUpdate();
+		}
+		
+		selectedPlanetMesh.position.x = vertex.x;
+		selectedPlanetMesh.position.y = vertex.y;
+		selectedPlanetMesh.position.z = vertex.z;
+		
+		selectedPlanetPrevPos.x = positionX;
+		selectedPlanetPrevPos.y = positionY;
+		selectedPlanetPrevPos.z = positionZ;
+	} else if (selectedPlanet == -1 && selectedPlanetMesh.visible) { // Dejar de mostrar selección.
+		selectedPlanetMesh.visible = false;
 	}
 }
 
@@ -329,8 +517,30 @@ export function cameraOnUpdate() {
  * Función para liberar de la memoria del módulo.
  */
 export function destroy() {
-
+	destroyHoverPlanet();
+	destroySelectPlanet();
 }
+
+/**
+ * Función para liberar de la memoria la selección.
+ */
+function destroyHoverPlanet() {
+	hoverPlanetTexture.dispose();
+	hoverPlanetMaterial.dispose();
+	hoverPlanetGeometry.dipose();
+	starSystem.view.scene.remove(hoverStarMesh);
+}
+
+/**
+ * Función para liberar de la memoria el apuntado.
+ */
+function destroySelectedPlanet() {
+	selectedPlanetTexture.dispose();
+	selectedPlanetMaterial.dispose();
+	selectedPlanetGeometry.dipose();
+	starSystem.view.scene.remove(selectedPlanetMesh);
+}
+
 
 /**
   * Función para resetear todos las variables de control.
@@ -352,7 +562,7 @@ export function resetAll() {
 export function goPrevStar() {
 	let newVisitedStarsPos = galaxyControl.visitedStarsPos - 1;
 	
-	if (newVisitedStarsPos >= 0) {
+	if (newVisitedStarsPos > 0) {
 		galaxyControl.setVisitedStarsPos(newVisitedStarsPos);
 		
 		game.gotoStarSystem(galaxyControl.visitedStars[newVisitedStarsPos]);
@@ -415,4 +625,13 @@ export function setPosY(value) {
   */
 export function setPosZ(value) {
 	posZ = value;
+}
+
+/**
+  * Settter selectedPlanet.
+  *
+  * @param value el nuevo valor.
+  */
+export function setSelectedPlanet(value) {
+	selectedPlanet = value;
 }

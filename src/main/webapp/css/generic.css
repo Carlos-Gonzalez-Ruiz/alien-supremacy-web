@@ -1,0 +1,97 @@
+/**
+  * CSS de estilos genéricos.
+  */
+
+/** Caja de contenido. */
+.box {
+	color: white;
+	
+	border: 1px solid lightskyblue;
+	border-radius: 5px;
+	background-color: #5555FF55;
+	padding: 10px;
+	box-shadow: dodgerblue 0px 0px 10px;
+	backdrop-filter: blur(10px);
+	
+	/*background-image: linear-gradient(0deg, #FFF5, 30%, #0000);*/
+	background-image: linear-gradient(0deg, #FFF5, 30%, #0000),linear-gradient(90deg, #9FF4, 25px, #0000),linear-gradient(-90deg, #9FF4, 25px, #0000)
+}
+
+/** Caja de contenido con flecha. */
+.box-arrow {
+	color: white;
+	
+	border: 1px solid lightskyblue;
+	border-radius: 5px;
+	background-color: #5555FF55;
+	padding: 10px;
+	box-shadow: dodgerblue 0px 0px 10px;
+	backdrop-filter: blur(10px);
+	
+	border-top: 1px solid white;
+	border-bottom: 1px solid darkblue;
+	border-top-left-radius: 0px;
+	border-bottom-left-radius: 0px;
+}
+
+/** Caja de contenido con flecha. (before) */
+.box-arrow:before {
+	content: '';
+	position: absolute;
+	height: 0px;
+	width: 0px;
+	top: -1px;
+	left: -1.4em; /* 1px buffer for zooming problems while rendering. */
+	border-width: 0.75em;
+	border-color: lightskyblue lightskyblue transparent transparent;
+	border-style: solid;
+}
+
+/** Título de la caja de contenido. */
+.box-title {
+	font-weight: 1000;
+	color: cornflowerblue;
+	padding-bottom: 10px;
+}
+
+/** Título de la caja de contenido sin padding. */
+.box-title-simple {
+	font-weight: 1000;
+	color: cornflowerblue;
+}
+
+/** Descripción sencilla de la caja de contenido. */
+.box-description {
+	color: orange;
+}
+
+/** Iconos del título. */
+.box-title i.bi {
+	color: #FFF;
+}
+
+/** Iconos del título. */
+.box-title-simple i.bi {
+	color: #FFF;
+}
+
+/** Contenido de la caja de contenido. */
+.box-content {
+	border: 1px solid lightskyblue;
+	background-color: #00000055;
+	padding: 5px;
+	
+	overflow-x: hidden;
+	overflow-y: scroll;
+}
+
+/** Tablas */
+table {
+	width: 100%;	
+}
+
+/** Centrar iconos de la tabla. */
+td i.bi {
+	display: block;
+	text-align: center;
+}

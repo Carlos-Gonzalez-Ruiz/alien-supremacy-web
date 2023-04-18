@@ -1,0 +1,51 @@
+/**
+  * CSS de estilos de juego / partida.
+  */
+
+/** Caja de selección de tropa. */
+.unit-select-box {
+	border: 1px solid yellow;
+	background-color: #FFFF5522;
+	box-shadow: #FFFF5555 0px 0px 5px;
+}
+
+/** Botón de juego. */
+button.game {
+	border: 1px solid #00F;
+	color: white;
+	border-radius: 3px;
+	font-family: 'Liberation Sans', sans-serif;
+	font-weight: bold;
+	padding: 3px 8px;
+	background-image: linear-gradient(#00F, #00A);
+	margin: 1px;
+	
+	transition: 0.2s;
+}
+
+/** Botón de juego. (hover) */
+button.game:hover {
+	cursor: pointer;
+	border: 1px solid white;
+	box-shadow: gray 0px 0px 10px;
+}
+
+/** Botón de juego. (active) */
+button.game:active {
+	color: gray;
+	border: 1px solid gray;
+	background-image: linear-gradient(#00A, #00F);
+	box-shadow: none;
+}
+
+/** Nombre de usuario en la caja de chat. */
+.chat-username {
+	color: chartreuse;
+	transition: 0.2s;
+}
+
+/** Nombre de usuario en la caja de chat. (hover) */
+.chat-username:hover {
+	color: #FFF;
+	cursor: pointer;
+}
