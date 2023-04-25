@@ -49,6 +49,13 @@
 		    <scope>runtime</scope>
 		</dependency>
 		
+		<!-- Drivers PostgreSQL -->
+		<dependency>
+		  <groupId>org.postgresql</groupId>
+		  <artifactId>postgresql</artifactId>
+		  <version>42.2.10</version>
+		</dependency>
+		
 		<!-- Test -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

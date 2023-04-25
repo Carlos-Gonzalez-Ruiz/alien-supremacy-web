@@ -99,12 +99,12 @@ let planetCloud2Geometries = [];
 let planetCloud2Meshes = [];
 
 /** Datos de planetas. */
-let planetData = [];
+export let planetData = [];
 
 /** Grupo de la estrella. */
 let groupStar = new THREE.Group();
 /** Lista de grupos de planetas. */
-let groupPlanets = [];
+export let groupPlanets = [];
 
 /** Grupo del sistema. */
 export let group = new THREE.Group();
@@ -118,9 +118,9 @@ let currentDate = 0;
 /** Geometrias de colisción de los planetas */
 let collisionGeometries = [];
 /** Meshes de colisión de los planetas. */
-let collisionMeshes = [];
+export let collisionMeshes = [];
 /** Grupo de colisión de los planetas. */
-let groupCollision = new THREE.Group();
+export let groupCollision = new THREE.Group();
 
 /** Número de texturas para los planetas de cada grupo. */
 const PLANET_TEXTURES = 5;
@@ -481,16 +481,19 @@ function initResources() {
   * Función para inicializar las colisiones de los planetas.
   */
 function initCollisions() {
-	// Planetas y estrella (+1).
+	// Planetas (y estrella +1).
 	for (let i = 0; i < MAX_PLANETS + 1; ++i) {
 		let geometry = new THREE.SphereGeometry(1, 12, 6);
 		collisionGeometries.push(geometry);
 		
 		let mesh = new THREE.Mesh(geometry, undefined);
-		mesh.receiveShadow = true;
+		mesh.name = i;
+		mesh.visible = false;
 		collisionMeshes.push(mesh);
 		
 		groupCollision.add(mesh);
+		
+		view.scene.add(groupCollision);
 	}
 }
 
@@ -513,6 +516,7 @@ export function generateStarSystem(seed, data) {
 		distanceToStar += 30 + random.get() * 30;
 		
 		let data = {
+			index: i,
 			distanceToStar: distanceToStar,
 			size: 0.5 + random.get() * 1.5,
 			speed: (1.5 * random.get() + 0.5) * random.get() > 0.5 ? 1 : -1,
@@ -525,9 +529,11 @@ export function generateStarSystem(seed, data) {
 		if (random.get() > 0.5) {
 			generatePlanet(i, seed * MAX_PLANETS + i, data);
 			
+			collisionMeshes[i].scale.set(10 * data.size, 10 * data.size, 10 * data.size);
 			planetLineMeshes[i].visible = true;
 			groupPlanets[i].visible = true;
 		} else {
+			collisionMeshes[i].scale.set(0, 0, 0);
 			planetLineMeshes[i].visible = false;
 			groupPlanets[i].visible = false;
 		}
@@ -569,9 +575,6 @@ function generateStar(data) {
   * @param data los datos del planeta.
   */
 function generatePlanet(index, seed, data) {
-	// Colisión.
-	collisionMeshes[index].scale.set = 10 * data.size;
-	
 	// Línea.
 	planetLineMeshes[index].scale.set(data.distanceToStar, data.distanceToStar, data.distanceToStar);
 	planetLineMaterials[index].color.r = data.terraformLevel == 0 ? 0.15 : 0.05;

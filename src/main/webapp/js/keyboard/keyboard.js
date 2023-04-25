@@ -36,10 +36,10 @@ export let cursorDeltaX = 0;
 /** Movimiento del ratón Y */
 export let cursorDeltaY = 0;
 
-/** Indiciar si el ratón se encuentra dentro de la interfaz DOM. */
-let onDomUI = false;
+/** Indiciar si el ratón se encuentra dentro de la interfaz DOM. (cualquiera) */
+export let onDomUI = false;
 /** Indiciar si el ratón se encuentra dentro de la interfaz DOM scrollable. */
-let onDomUIScrollable = false;
+export let onDomUIScrollable = false;
 
 /**
   * Función que añade los lambda para registrar ciertos eventos de teclas.
@@ -60,7 +60,6 @@ export function init() {
 		if (!onDomUI) {
 			mousePressed[e.button] = true;
 		}
-		//console.log(onDomUI);
 	};
 	document.body.onmouseup = function(e) {
 		mousePressed[e.button] = false;
@@ -74,9 +73,11 @@ export function init() {
 		onDomUI = false;
 	};
 	domUi.divScrollable.onmouseover = function(e) {
+		onDomUI = true;
 		onDomUIScrollable = true;
 	};
 	domUi.divScrollable.onmouseout = function(e) {
+		onDomUI = false;
 		onDomUIScrollable = false;
 	};
 	
@@ -148,7 +149,12 @@ export function keyProcessing() {
   * @return la tecla ha sido presionada.
   */
 export function checkPressed(key) {
-	return pressedCaps[key.toUpperCase()];
+	// Devolver falso en caso de que esté haciendo focus.
+	if (document.activeElement === document.body) {
+		return pressedCaps[key.toUpperCase()];
+	} else {
+		return false;
+	}
 }
 
 /**
@@ -158,7 +164,12 @@ export function checkPressed(key) {
   * @return la tecla ha sido presionada.
   */
 export function checkPressedOnce(key) {
-	return pressedCaps[key.toUpperCase()] && !pressedCapsPrev[key.toUpperCase()];
+	// Devolver falso en caso de que esté haciendo focus.
+	if (document.activeElement === document.body) {
+		return pressedCaps[key.toUpperCase()] && !pressedCapsPrev[key.toUpperCase()];
+	} else {
+		return false;
+	}
 }
 
 /**
@@ -168,7 +179,12 @@ export function checkPressedOnce(key) {
   * @return la tecla se ha dejado de presionar.
   */
 export function checkReleased(key) {
-	return !pressedCaps[key.toUpperCase()] && pressedCapsPrev[key.toUpperCase()];
+	// Devolver falso en caso de que esté haciendo focus.
+	if (document.activeElement === document.body) {
+		return !pressedCaps[key.toUpperCase()] && pressedCapsPrev[key.toUpperCase()];
+	} else {
+		return false;
+	}
 }
 
 /**

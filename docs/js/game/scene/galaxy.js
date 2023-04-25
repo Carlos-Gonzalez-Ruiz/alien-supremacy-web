@@ -6,6 +6,7 @@ import * as THREE from '/proyecto-fin-ciclo/js/libs/three.module.js';
 
 import * as graphics from '/proyecto-fin-ciclo/js/graphics/graphics.js';
 import * as keyboard from '/proyecto-fin-ciclo/js/keyboard/keyboard.js';
+import * as random from '/proyecto-fin-ciclo/js/random/random.js';
 
 import * as galaxyControl from '/proyecto-fin-ciclo/js/game/scene/galaxy-control.js'
 import * as galaxyEffectTravel from '/proyecto-fin-ciclo/js/game/scene/galaxy-effect-travel.js'
@@ -44,6 +45,8 @@ const N_ARMS = 4 + Math.floor(Math.random() * 8);
   * Función de inicialización del módulo.
   */
 export function init() {
+	random.setSeed(Math.random());
+	
 	// Crear escena.
 	view = graphics.createView(true, galaxyControl.cameraOnUpdate);
 	
@@ -59,7 +62,7 @@ export function init() {
 	
 	// Velocidad de los brazos.
 	for (let i = 0; i < N_ARMS; ++i) {
-		armSpeeds.push(Math.random() * 0.0001);
+		armSpeeds.push(random.get() * 0.0001);
 	}
 }
 
@@ -159,7 +162,7 @@ function initStars() {
 	
 	starData = [ [], [] ];
 	
-	// Vaciar datos.
+	// Generar estrellas galaxia.
 	for (let i = 0; i < N_ARMS; ++i) {
 		const vertices = [];
 		const colors = [];
@@ -182,18 +185,18 @@ function initStars() {
 			let dirBase = Math.PI / N_ARMS * i;
 			// Por cada espiral.
 			for (let u = 0; u < N_STARS_PER_ARM; ++u) {
-				let radius = Math.random() * GALAXY_SIZE;
-				let dir = dirBase + radius / GALAXY_SIZE * GALAXY_SPIRAL_RADIUS_FACTOR + Math.random() * GALAXY_SPIRAL_RANDOM_FACTOR / (radius / (GALAXY_SIZE / 2));
+				let radius = random.get() * GALAXY_SIZE;
+				let dir = dirBase + radius / GALAXY_SIZE * GALAXY_SPIRAL_RADIUS_FACTOR + random.get() * GALAXY_SPIRAL_RANDOM_FACTOR / (radius / (GALAXY_SIZE / 2));
 				
 				let x = Math.sin(dir * Math.PI * 2) * radius;
-				let y = (Math.random() * GALAXY_HEIGHT - GALAXY_HEIGHT / 2);
+				let y = (random.get() * GALAXY_HEIGHT - GALAXY_HEIGHT / 2);
 				let z = Math.cos(dir * Math.PI * 2) * radius;
 				
-				let red = Math.random();
+				let red = random.get();
 				let blue = 1 - red;
-				let green = (red + blue) / 2 * Math.random();
+				let green = (red + blue) / 2 * random.get();
 				
-				let size = STAR_MIN_SIZE + Math.random() * STAR_MAX_SIZE;
+				let size = STAR_MIN_SIZE + random.get() * STAR_MAX_SIZE;
 				
 				starData[i][u] = {
 					x: x,
@@ -334,7 +337,7 @@ function initDust() {
 		transparent: true
 	});
 	
-	// Datos
+	// Generar polvo galaxia.
 	for (let i = 0; i < N_ARMS; ++i) {
 		const vertices = [];
 		const colors = [];
@@ -354,23 +357,23 @@ function initDust() {
 			
 			let dirBase = Math.PI / N_ARMS * i;
 			
-			let colorR = Math.random();
-			let colorG = Math.random();
-			let colorB = Math.random();
+			let colorR = random.get();
+			let colorG = random.get();
+			let colorB = random.get();
 			
 			// Por cada espiral.
 			for ( let u = 0; u < N_STARS_PER_ARM; ++u) {
-				let radius = Math.random() * GALAXY_SIZE;
-				let dir = dirBase + radius / GALAXY_SIZE * GALAXY_SPIRAL_RADIUS_FACTOR + Math.random() * GALAXY_SPIRAL_RANDOM_FACTOR / (radius / (GALAXY_SIZE / 2));
+				let radius = random.get() * GALAXY_SIZE;
+				let dir = dirBase + radius / GALAXY_SIZE * GALAXY_SPIRAL_RADIUS_FACTOR + random.get() * GALAXY_SPIRAL_RANDOM_FACTOR / (radius / (GALAXY_SIZE / 2));
 				
 				let x = Math.sin(dir * Math.PI * 2) * radius;
-				let y = (Math.random() * GALAXY_HEIGHT - GALAXY_HEIGHT / 2);
+				let y = (random.get() * GALAXY_HEIGHT - GALAXY_HEIGHT / 2);
 				let z = Math.cos(dir * Math.PI * 2) * radius;
 				
 				vertices.push(x, y, z);
-				colors.push(colorR + Math.random() / 3, colorG + Math.random() / 3, colorB + Math.random() / 3, 0.04);
-				sizes.push(STAR_MIN_SIZE + Math.random() * STAR_MAX_SIZE);
-				textureIds.push(Math.floor(Math.random() * 3));
+				colors.push(colorR + random.get() / 3, colorG + random.get() / 3, colorB + random.get() / 3, 0.04);
+				sizes.push(STAR_MIN_SIZE + random.get() * STAR_MAX_SIZE);
+				textureIds.push(Math.floor(random.get() * 3));
 			}
 		}
 		

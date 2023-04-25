@@ -57,6 +57,31 @@ export function createElement(html) {
 }
 
 /**
+  * Función para crear un elemento de interfaz que permite hacer scroll.
+  * Por defecto, no muestra el elemento creado. Se ha de permitir su visualización
+  * mediante la función displayElement().
+  * 
+  * @param html el código HTML a mostrar.
+  * @return el elemento creado.
+  */
+export function createScrollableElement(html) {
+	// Crear elemento dummy.
+	let element = document.createElement('div');
+	element.id = 'ui#' + elements.length;
+	element.innerHTML = html;
+	
+	elements.push(element);
+	
+	// Instertar elemento.
+	divScrollable.appendChild(element);
+	
+	// Esonder elemento.
+	hideElement(element);
+	
+	return element;
+}
+
+/**
   * Función para eliminar un elemento de interfaz.
   * El elemento pasado como parámetro ha de haber sido añadido anteriormente al interfaz.
   *
@@ -64,6 +89,7 @@ export function createElement(html) {
   */
 export function removeElement(element) {
 	div.removeChild(element);
+	divScrollable.removeChild(element);
 }
 
 /**
@@ -133,6 +159,18 @@ export function setElementPos(element, x, y, z) {
 }
 
 /**
+  * Función para hacer que un elemento determinado realizar una animación.
+  *
+  * @param element el elemento.
+  * @param animationName el nombre de la animación definida en los ficheros CSS.
+  * @param animationDuration la duración de la animación a realizar.
+  */
+export function setAnimation(element, animationName, animationDuration) {
+	element.style.animation = animationName;
+	element.style.animationDuration = animationDuration;
+}
+
+/**
   * Función para obtener el ancho de un elemento, ya sea escondido o siendo mostrado.
   *
   * @param element el elemento.
@@ -164,6 +202,16 @@ export function getHeight(element) {
 	element.style.display = prev;
 	
 	return height;
+}
+
+/**
+  * Función para obtener si se está mostrando o no cierto elemento.
+  *
+  * @param element el elemento.
+  * @return la visibilidad del elemento.
+  */
+export function getVisibility(element) {
+	return (element.style.display != 'none')
 }
 
 /**

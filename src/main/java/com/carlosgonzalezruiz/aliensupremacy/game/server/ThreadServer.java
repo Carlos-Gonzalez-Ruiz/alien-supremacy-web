@@ -9,6 +9,7 @@ import java.util.List;
 import com.carlosgonzalezruiz.aliensupremacy.constant.GameConstants;
 import com.carlosgonzalezruiz.aliensupremacy.game.AbstractThread;
 import com.carlosgonzalezruiz.aliensupremacy.game.client.ThreadClient;
+import com.carlosgonzalezruiz.aliensupremacy.networking.bean.RoomData;
 
 /**
  * Alien Supremacy - Proyecto Fin de Ciclo
@@ -30,6 +31,8 @@ public class ThreadServer extends AbstractThread {
 	private ServerSocket server;
 	/** Lista de hilos de cliente. */
 	private ArrayList<ThreadClient> clients;
+	/** Lista de salas actuales. */
+	private ArrayList<RoomData> rooms;
 
 	/** Indicar si el servidor está operativo. */
 	private boolean running;
@@ -41,6 +44,7 @@ public class ThreadServer extends AbstractThread {
 		super();
 
 		this.clients = new ArrayList<>();
+		this.rooms = new ArrayList<>();
 		this.running = true;
 	}
 
@@ -59,8 +63,11 @@ public class ThreadServer extends AbstractThread {
 			// Aceptar peticiones de clientes hasta que running = false.
 			while (running) {
 				Socket client = server.accept();
-				client.setSoTimeout(2000); // Establecer timeout
+				client.setSoTimeout(5000); // Establecer timeout
 
+				// Limpiar lista de clientes.
+				cleanClients();
+				
 				// Instanciar hilo.
 				ThreadClient threadClient = new ThreadClient(this, client);
 				threadClient.start();
@@ -85,6 +92,34 @@ public class ThreadServer extends AbstractThread {
 	}
 
 	/**
+	 * Método que elimina los clientes de la lista de clientes que está desconectados.
+	 */
+	public synchronized void cleanClients() {
+		ArrayList<ThreadClient> removeClients = new ArrayList<>();
+		
+		for (ThreadClient c : clients) {
+			// Eliminar hilos cliente fantasma (connected = false)
+			if (!c.getConnected()) {
+				try {
+					c.join();
+					
+					removeClients.add(c);
+					
+					log.info("Eliminated ghost client thread.");
+				} catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		// Eliminar clientes 1 a 1.
+		for (int i = 0; i < removeClients.size(); ++i) {
+			clients.remove(removeClients.get(i));
+		}
+	}
+	
+	/**
 	 * Método que hace que el servidor deje de estar operativo. Una vez llamada, se
 	 * requerirá de reinizar la aplicación para volver a funcionar el servidor.
 	 */
@@ -99,6 +134,15 @@ public class ThreadServer extends AbstractThread {
 	 */
 	public synchronized List<ThreadClient> getClients() {
 		return clients;
+	}
+	
+	/**
+	 * Get rooms
+	 * 
+	 * @return List<RoomData>
+	 */
+	public synchronized List<RoomData> getRooms() {
+		return rooms;
 	}
 	
 	/**

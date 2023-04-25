@@ -1,4 +1,6 @@
-"use strict";
+/**
+  * Módulo para la gestión de comunicación de red.
+  */
 
 let socket;
 
@@ -37,7 +39,7 @@ document.querySelector("#buttonConnect").onclick = function() {
 		console.log("Connection error: ");
 		console.log(error);
 		//alert("Disconnected from server.");
-	};	
+	};
 };
 
 document.querySelector("#buttonConnect").click();

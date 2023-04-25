@@ -51,6 +51,7 @@ export function init(newScene) {
 	geometry = new THREE.BufferGeometry();
 	
 	mesh = new THREE.LineSegments(geometry, material);
+	mesh.frustumCulled = false;
 	scene.add(mesh);
 }
 

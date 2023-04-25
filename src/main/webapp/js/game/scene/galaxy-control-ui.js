@@ -16,9 +16,9 @@ import * as galaxyControl from '/js/game/scene/galaxy-control.js';
 /** Lista de elementos. */
 let elements = [];
 /** Caja para ver estrella. */
-let starHoveredBox;
+export let starHoveredBox;
 /** Caja para viajar a estrella. */
-let starSelectedBox;
+export let starSelectedBox;
 
 /** Indicar si se debe mostrar la UI (cuando sea su nivel) */
 let displayUi = false;
@@ -36,40 +36,31 @@ export function init() {
 function initDomUi() {
 	// Caja para ver estrella.
 	starHoveredBox = domUi.createElement(`
-		<div
-		 style="
-			border: 2px solid blue;
-			border-radius: 5px;
-			background-color: darkblue;
-			padding: 0px 10px;
-		">
-			<p style="color: white;">
-				<span class="star-name">Star name</span>
-			</p>
+		<div class="box-arrow">
+			<div style="color: white;">
+				<span class="box-title">
+					<i class="bi bi-stars"></i>
+					<span class="star-name"></span>
+				</span>
+			</div>
 		</div>
 	`);
 	elements.push(starHoveredBox);
 	
 	// Caja para viajar a estrella.
 	starSelectedBox = domUi.createElement(`
-		<div
-		 style="
-			top: 132px;
-			display: inline-block;
-			
-			border: 2px solid blue;
-			border-radius: 5px;
-			background-color: darkblue;
-			padding: 0px 10px;
-		">
-			<p style="color: white;">
-				<span class="star-name">Star name</span>
-				<button class="goto-star">Go</button>
-			</p>
+		<div class="box-arrow">
+			<div style="color: white;">
+				<span class="box-title">
+					<i class="bi bi-stars"></i>
+					<span class="star-name"></span>
+				</span>
+				<button class="game goto-star">Go</button>
+			</div>
 		</div>
 	`);
 	elements.push(starSelectedBox);
-	starSelectedBox.querySelector("button.goto-star").onclick = function() {
+	starSelectedBox.querySelector('button.goto-star').onclick = function() {
 		game.gotoStarSystemSave(galaxy.starData[galaxyControl.selectedArm][galaxyControl.selectedStar]);
 	}
 }
@@ -108,13 +99,13 @@ export function displayStarHoveredBox() {
 	domUi.displayElement(
 		starHoveredBox,
 		coords.x + 32 + 'px',
-		(coords.y - elementHeight / 2) + 'px',
+		coords.y + 'px',
 		10
 	);
 }
 
 /**
-  * Función para refactorizar el dejar de mostrar starSelectedBox.
+  * Función para refactorizar el dejar de mostrar starHoveredBox.
   */
 export function hideStarHoveredBox() {
 	domUi.hideElement(starHoveredBox);
@@ -130,7 +121,7 @@ export function displayStarSelectedBox() {
 	domUi.displayElement(
 		starSelectedBox,
 		coords.x + 32 + 'px',
-		(coords.y - elementHeight / 2) + 'px',
+		coords.y + 'px',
 		9
 	);
 }

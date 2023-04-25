@@ -9,7 +9,11 @@ import * as gameConstants from '/js/constants/game-constants.js';
 
 import * as graphics from '/js/graphics/graphics.js';
 
+import * as audio from '/js/game/audio.js';
 import * as line from '/js/game/line.js';
+
+import * as gameControl from '/js/game/game-control.js';
+import * as gameMenuUi from '/js/game/game-menu-ui.js';
 
 import * as universe from '/js/game/scene/universe.js';
 import * as galaxy from '/js/game/scene/galaxy.js';
@@ -19,16 +23,31 @@ import * as starSystem from '/js/game/scene/starsystem.js';
 import * as starSystemControl from '/js/game/scene/starsystem-control.js'
 import * as starSystemControlUi from '/js/game/scene/starsystem-control-ui.js'
 
+/** Indicar si está en menú principial. */
+export let mainMenu;
+/** Indicar si está en modo espectador. */
+export let spectatorMode = false;
+
 /** Nivel de vista. */
 export let viewLevel = gameConstants.VIEW_LEVEL_GALAXY;
 
 /** Aceleración de la gravedad. */
 export let gravityAcc = 0.03;
 
+/** Datos del usuario. */
+export let user = {
+	userId: -1,
+	username: 'Guest'
+};
+
 /**
   * Función de inicialización del módulo.
   */
 export function init() {
+	// Iniciar juego.
+	gameControl.init();
+	gameMenuUi.init();
+	
 	// Iniciar universo.
 	universe.init();
 	// Iniciar galaxia.
@@ -36,24 +55,27 @@ export function init() {
 	// Iniciar sistema estelar.
 	starSystem.init();
 	
+	// Iniciar sonido.
+	audio.init();
 	// Iniciar líneas.
 	line.init(galaxy.view.scene);
+	
+	// Iniciar juego siempre en el menú.
+	setMainMenu(true);
 }
 
 /**
   * Función de bucle del módulo.
   */
 export function update() {
-	if (false) {
-		// Menú de pausa.
-		
-	} else {
-		universe.update();
-		galaxy.update();
-		starSystem.update();
-		
-		line.update();
-	}
+	gameControl.update();
+	gameMenuUi.update();
+	
+	universe.update();
+	galaxy.update();
+	starSystem.update();
+	
+	line.update();
 }
 
 /**
@@ -62,7 +84,6 @@ export function update() {
   * @param data datos de la estrella.
   */
 export function gotoStarSystemSave(data) {
-	
 	galaxyControl.setVisitedStarsPos(galaxyControl.visitedStarsPos + 1);
 	galaxyControl.visitedStars[galaxyControl.visitedStarsPos] = data;
 	galaxyControl.visitedStars.splice(galaxyControl.visitedStarsPos + 1, galaxyControl.visitedStars.length - galaxyControl.visitedStarsPos);
@@ -75,6 +96,7 @@ export function gotoStarSystemSave(data) {
 		// Eliminar línea.
 		line.remove(galaxyControl.visitedStarsLines[0]);
 		galaxyControl.visitedStarsLines.shift();
+		galaxyControl.visitedStarsLinesColors.shift();
 	}
 	
 	// Eliminar color a líneas anteriores.
@@ -100,6 +122,11 @@ export function gotoStarSystemSave(data) {
   * @param data datos de la estrella.
   */
 export function gotoStarSystem(data) {
+	// Deseleccionar planeta.
+	starSystemControl.selectedPlanetMesh.visible = false;
+	starSystemControl.setSelectedPlanet(-1);
+	starSystemControlUi.hidePlanetSelectedBox();
+	
 	if (viewLevel != gameConstants.VIEW_LEVEL_STARSYSTEM) {
 		/*// Eliminar líneas anteriores.
 		galaxyControl.setVisitedStarsLinesColors([]);
@@ -161,4 +188,64 @@ export function gotoGalaxy() {
 	
 	// Mostar elementos.
 	galaxyControl.pointerMesh.visible = true;
+}
+
+/**
+  * Settter mainMenu.
+  *
+  * @param value el nuevo valor.
+  */
+export function setMainMenu(value) {
+	mainMenu = value;
+	
+	galaxyControl.hoverStarMesh.visible = !value;
+	galaxyControl.selectedStarMesh.visible = !value;
+	galaxyControl.pointerMesh.visible = !value;
+	
+	// Viajar a galaxia en caso de que no lo este.
+	gotoGalaxy();
+	
+	// Deselecionar elementos.
+	galaxyControl.unhoverStar();
+	galaxyControl.unselectStar();
+	
+	starSystemControl.unhoverPlanet();
+	starSystemControl.unselectPlanet();
+	
+	// Establecer valores iniciales en caso de estar en el menú principal.
+	if (mainMenu) {
+		// Dejar de mostrar elementos.
+		galaxyControl.hoverStarMesh.visible = false;
+		galaxyControl.selectedStarMesh.visible = false;
+		galaxyControl.pointerMesh.visible = false;
+		
+		galaxyControl.setPosXTarget(0);
+		galaxyControl.setPosYTarget(0);
+		galaxyControl.setPosZTarget(0);
+		galaxyControl.setDistanceTarget(400);
+		galaxyControl.setDirXTarget(Math.PI / 3);
+		
+		// Desplazarse a los objetivos definidos.
+		galaxyControl.setReachTarget(true);
+	}
+}
+
+/**
+  * Settter spectatorMode.
+  *
+  * @param value el nuevo valor.
+  */
+export function setSpectatorMode(value) {
+	spectatorMode = value;
+}
+
+/**
+  * Settter user. Adicionalmente, actualiza el estado de la UI.
+  *
+  * @param value el nuevo valor.
+  */
+export function setUser(value) {
+	user = value;
+	
+	gameMenuUi.accountBox.querySelector('span.name').textContent = user.username;
 }

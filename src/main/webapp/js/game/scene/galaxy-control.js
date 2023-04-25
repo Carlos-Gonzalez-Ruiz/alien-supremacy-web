@@ -11,6 +11,7 @@ import * as graphics from '/js/graphics/graphics.js';
 import * as keyboard from '/js/keyboard/keyboard.js';
 
 import * as game from '/js/game/game.js';
+import * as gameControl from '/js/game/game-control.js';
 
 import * as line from '/js/game/line.js';
 
@@ -28,11 +29,15 @@ let raycasterPointer = new THREE.Vector2(0, 0);
 
 /** Estrella dónde se ha posado el ratón. */
 export let hoveredStar = -1;
+/** Nombre de la estrella en dónde se ha posado el ratón. */
+export let hoveredStarName = '';
 /** Brazo dónde se ha posado el ratón. */
 export let hoveredArm = -1;
 /** Estrella seleccionada. */
 export let selectedStar = -1;
-/** Posición de la estrella seleccionada anteriormente. */
+/** Nombre de la estrella seleccionada. */
+export let selectedStarName = '';
+/** Posición de la estrella seleccionada anteriormente. (para actualizado de la UI) */
 let selectedStarPrevPos = new THREE.Vector3();
 /** Indicar tiempo máximo de selección para hacer doble-click. (milisegundos) */
 let selectedStarTimestampMax = 500;
@@ -126,6 +131,24 @@ export let visitedStarsCapacity = 5;
 /** Posición actual del histórico de estrellas visitadas. */
 export let visitedStarsPos = 0;
 
+/** Indicar si tiene que realizar animación de cambiar de galaxia. */
+export let regenerateAnimation = false;
+/** Semilla que se utiliazará para regenerar la galaxia una vez llegada a la mita de la animación. */
+export let regenerateAnimationSeed;
+
+/** Indicar que se ha de alcanzar cierto objetivo. */
+export let reachTarget = false;
+/** Posición objetivo X. */
+export let posXTarget = 0;
+/** Posición objetivo Y. */
+export let posYTarget = 0;
+/** Posición objetivo Z. */
+export let posZTarget = 0;
+/** Distancia objetivo. */
+export let distanceTarget = 0;
+/** Dirección X objetivo. */
+export let dirXTarget = 0;
+
 /**
   * Función de inicialización del módulo.
   */
@@ -134,11 +157,13 @@ export function init() {
 	raycaster = new THREE.Raycaster();
 	raycaster.params.Points.threshold = 0.5;
 	
+	// Inicializar elementos.
 	initHoverStar();
 	initSelectedStar();
 	initPointer();
 	initVisitedStar();
 	
+	// Interfaz.
 	galaxyControlUi.init();
 }
 
@@ -184,7 +209,7 @@ function initSelectedStar() {
 	selectedStarMaterial = new THREE.PointsMaterial(
 		{
 			color: 0xFFFFFF,
-			map: hoverStarTexture,
+			map: selectedStarTexture,
 			blending: THREE.AdditiveBlending,
 			depthTest: false,
 			transparent: true
@@ -245,7 +270,13 @@ export function update() {
 	
 	// Solo permitir control en caso de que el nivel sea el adecuado.
 	if (game.viewLevel == gameConstants.VIEW_LEVEL_GALAXY) {
-		movement();
+		// Diferentes controles en función de si se encuentra en el menú principal.
+		if (game.mainMenu) {
+			movementSmooth();
+		} else {
+			movement();
+		}
+		
 		camera();
 	} else if (game.viewLevel == gameConstants.VIEW_LEVEL_STARSYSTEM) {
 		 // Posicionar la cámara a la estrella actual.
@@ -285,7 +316,169 @@ export function update() {
 		}
 	}
 	
-	userInterface();
+	// Solo habilitar la interfaz si no se encuentra en el menú principal.
+	if (!game.mainMenu) {
+		userInterface();
+	}
+	
+	// Realizar animación de regenerar galaxia si es necesario.
+	regenerateAnimationUpdate();
+	
+	// Desplazar a cierto objetivo si es necesario.
+	reachTargetUpdate();
+}
+
+/**
+  * Función para los controles de la cámara relativos al movimiento para cuando se encuentra en el menú principal.
+  */
+function movementSmooth() {
+	movementSmoothKeyboard();
+	movementSmoothCursor();
+	
+	// Mover ligeramente la cámara.
+	dirY += 0.0002;
+}
+
+/**
+  * Función para los controles de la cámara relativos al movimiento para cuando se encuentra en el menú principal. (Teclado)
+  */
+function movementSmoothKeyboard() {
+	/// Movimiento cámara.
+	{
+		// Normal.
+		let noKey = true;
+		
+		if (keyboard.checkPressed('W')) {
+			if (posSpeed < posSpeedMax) {
+				posSpeed += posAcc;
+			}
+			
+			noKey = false;
+		}
+		if (keyboard.checkPressed('S')) {
+			if (posSpeed > -posSpeedMax) {
+				posSpeed -= posAcc;
+			}
+			
+			noKey = false;
+		}
+		if (noKey) {
+			posSpeed /= posDeacc;
+		}
+		
+		// Strafe.
+		let noKeyStrafe = true;
+		
+		if (keyboard.checkPressed('A')) {
+			if (posSpeedStrafe < posSpeedMax) {
+				posSpeedStrafe += posAcc;
+			}
+			
+			noKeyStrafe = false;
+		}
+		if (keyboard.checkPressed('D')) {
+			if (posSpeedStrafe > -posSpeedMax) {
+				posSpeedStrafe -= posAcc;
+			}
+			
+			noKeyStrafe = false;
+		}
+		if (noKeyStrafe) {
+			posSpeedStrafe /= posDeacc;
+		}
+		
+		// Aplicar velocidad a la posición.
+		posX += posSpeed * Math.sin(dirY) + posSpeedStrafe * Math.sin(dirY + Math.PI / 2);
+		posZ += posSpeed * Math.cos(dirY) + posSpeedStrafe * Math.cos(dirY + Math.PI / 2);
+	}
+	
+	/// Rotación cámara.
+	{
+		// Eje X.
+		let noKeyX = true;
+		
+		if (keyboard.checkPressed('ArrowUp')) {
+			if (dirSpeedX < dirSpeedMax) {
+				dirSpeedX += dirAcc;
+			}
+			
+			noKeyX = false;
+		}
+		if (keyboard.checkPressed('ArrowDown')) {
+			if (dirSpeedX > -dirSpeedMax) {
+				dirSpeedX -= dirAcc;
+			}
+			
+			noKeyX = false;
+		}
+		if (noKeyX) {
+			dirSpeedX /= 1.02;
+		}
+		
+		// Eje Y.
+		let noKeyY = true;
+		
+		if (keyboard.checkPressed('ArrowLeft')) {
+			if (dirSpeedY > -dirSpeedMax) {
+				dirSpeedY -= dirAcc;
+			}
+			
+			noKeyY = false;
+		}
+		if (keyboard.checkPressed('ArrowRight')) {
+			if (dirSpeedY < dirSpeedMax) {
+				dirSpeedY += dirAcc;
+			}
+			
+			noKeyY = false;
+		}
+		if (noKeyY) {
+			dirSpeedY /= 1.02;
+		}
+		
+		// Aplicar velocidad a la direción.
+		dirX += dirSpeedX;
+		dirY += dirSpeedY;
+	}
+	
+	/// Distancia de la cámara.
+	{
+		let deltaY = keyboard.checkPressed('+') - keyboard.checkPressed('-');
+		
+		if ((deltaY < 0 && distance + deltaY * distanceDeacc > distanceMin) ||
+		(deltaY > 0 && distance + deltaY * distanceDeacc < distanceMax)) {
+			distanceSpeed = deltaY * distanceSpeedFactor * distance / 100;
+		} else {
+			distanceSpeed /= distanceDeacc;
+		}
+	}
+}
+
+/**
+  * Función para los controles de la cámara relativos al movimiento para cuando se encuentra en el menú principal. (Ratón)
+  */
+function movementSmoothCursor() {
+	if (keyboard.checkMouseButtonPressed(keyboardConstants.MB_RIGHT)) {
+		dirSpeedX += keyboard.cursorDeltaY / 7000;
+		dirSpeedY -= keyboard.cursorDeltaX / 7000;
+	}
+	
+	// Limitar cámara.
+	if (dirX > Math.PI / 2) {
+		dirX = Math.PI / 2;
+	} else if (dirX < -Math.PI / 2) {
+		dirX = -Math.PI / 2;
+	}
+	
+	// Distancia de la cámara.
+	if ((keyboard.wheelDeltaY < 0 && distance + keyboard.wheelDeltaY * distanceDeacc > distanceMin) ||
+	(keyboard.wheelDeltaY > 0 && distance + keyboard.wheelDeltaY * distanceDeacc < distanceMax)) {
+		distanceSpeed = keyboard.wheelDeltaY * distanceSpeedFactor * distance / 100;
+	} else {
+		distanceSpeed /= 1.1;
+	}
+	
+	distance += distanceSpeed;
 }
 
 /**
@@ -409,10 +602,6 @@ function movementKeyboard() {
 			distanceSpeed /= distanceDeacc;
 		}
 	}
-	
-	if (keyboard.checkPressed('R')) {
-		galaxy.objectGroup.position.x += 1;
-	}
 }
 
 /**
@@ -479,11 +668,8 @@ function userInterface() {
 			hoverStarMesh.position.z = vertex.z;
 			
 			// Mostrar datos de estrella.
-			if ((hoveredArm != armIndex || hoveredStar != index) && (selectedArm != armIndex || selectedStar != index)) {
-				galaxyControlUi.displayStarHoveredBox();
-				
-				hoveredStar = index;
-				hoveredArm = armIndex;
+			if (selectedArm != armIndex || selectedStar != index) {
+				hoverStar(armIndex, index);
 			}
 			
 			// Seleccionar estrella.
@@ -496,15 +682,10 @@ function userInterface() {
 					selectedStarMesh.position.z = vertex.z;
 					
 					// Dejar de mostrar caja de posar sobre estrella.
-					hoveredStar = -1;
-					hoveredArm = -1;
-					galaxyControlUi.hideStarHoveredBox();
+					unhoverStar();
 					
 					// Mostrar caja de selección.
-					galaxyControlUi.displayStarSelectedBox();
-					
-					selectedStar = index;
-					selectedArm = armIndex;
+					selectStar(armIndex, index);
 					
 					// Indicar tiempo en el que fue seleccionado.
 					selectedStarTimestampLimit = Date.now() + selectedStarTimestampMax;
@@ -513,33 +694,21 @@ function userInterface() {
 					game.gotoStarSystemSave(galaxy.starData[selectedArm][selectedStar]);
 				} else {
 					// Deseleccionar al hacer click otra vez, si ha pasado el tiempo de selección.
-					selectedStarMesh.visible = false;
-					
-					selectedStar = -1;
-					selectedArm = -1;
-					galaxyControlUi.hideStarSelectedBox();
+					unselectStar();
 				}
 			}
 		}
 		
 		// Función para cuando no ocurra una intersección-
 		function noIntersectionOccurs() {
-			hoverStarMesh.visible = false;
-			
 			// Dejar de mostrar datos de estrella.
-			if (hoveredStar != -1) {
-				hoveredStar = -1;
-				hoveredArm = -1;
-				galaxyControlUi.hideStarHoveredBox();
+			if (hoveredStar != -1 || hoverStarMesh.visible) {
+				unhoverStar();
 			}
 			
 			// Deseleccionar estrella.
 			if (keyboard.checkMouseButtonPressedOnce(keyboardConstants.MB_LEFT) && selectedStar != -1) {
-				selectedStarMesh.visible = false;
-				
-				selectedStar = -1;
-				selectedArm = -1;
-				galaxyControlUi.hideStarSelectedBox();
+				unselectStar();
 			}
 		}
 		
@@ -554,7 +723,7 @@ function userInterface() {
 			raycaster.far = maxDistance;
 			
 			let intersections = raycaster.intersectObjects(galaxy.starMeshes, false);
-			if (intersections.length > 0) {
+			if (!keyboard.onDomUI && !gameControl.selecting && intersections.length > 0) {
 				let armIndex = intersections[0].object.name;
 				let index = intersections[0].index;
 				
@@ -620,6 +789,70 @@ function userInterface() {
 }
 
 /**
+  * Función para realizar animación de generar galaxia.
+  */
+function regenerateAnimationUpdate() {
+	// Establecer parámetros de animación.
+	const LIMIT = 2000;
+	const speedFactor = 2;
+	
+	// Solo ejecutar animacíon siempre y cuando se haya llegado a cierto objetivo.
+	if (regenerateAnimation && !reachTarget) {
+		if (posX <= 0) {
+			posX -= (Math.abs(posX) + 1) / speedFactor;
+			if (posX < -LIMIT) {
+				posX = LIMIT;
+				galaxy.generateGalaxy(regenerateAnimationSeed);
+			}
+		} else {
+			posX -= (Math.abs(posX) + 1) / speedFactor;
+			if (posX - (Math.abs(posX) + 1) / speedFactor < 0) {
+				posX = 0;
+				regenerateAnimation = false;
+			}
+		}
+	}
+}
+
+/**
+  * Función para actualizar ciertos valores de la cámara en caso de que reachTarget = true
+  */
+function reachTargetUpdate() {
+	if (reachTarget) {
+		let deltaX = posX - posXTarget;
+		let deltaY = posY - posYTarget;
+		let deltaZ = posZ - posZTarget;
+		
+		let localDst = Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
+		let deltaDistance = distance - distanceTarget;
+		let deltaDirX = dirX - dirXTarget;
+		if (localDst > 0.025 || Math.abs(deltaDistance) > 5 || Math.abs(deltaDirX) > 0.1) { // Para cuando se llegue a cierto punto.
+			let localDstXZ = Math.sqrt(deltaX * deltaX + deltaZ * deltaZ);
+			
+			let localDirX = Math.atan2(localDstXZ, deltaY);
+			let localDirY = Math.atan2(deltaX, deltaZ);
+			
+			posX -= Math.sin(localDirY) * localDst / 5 * Math.sin(localDirX);
+			posY -= Math.cos(localDirX) * localDst / 5;
+			posZ -= Math.cos(localDirY) * localDst / 5 * Math.sin(localDirX);
+			
+			distance -= deltaDistance / 5;
+			dirX -= deltaDirX / 5;
+		} else {
+			posX = posXTarget;
+			posY = posYTarget;
+			posZ = posZTarget;
+			
+			distance = distanceTarget;
+			
+			dirX = dirXTarget;
+			
+			reachTarget = false;
+		}
+	}
+}
+
+/**
   * Callback de actualización cuando la cámara sea actualizada.
   */
 export function cameraOnUpdate() {
@@ -675,6 +908,92 @@ function destroyVisitedStar() {
 }
 
 /**
+  * Función para abstraer el posar sobre una estrella,
+  *
+  * @param armIndex índice del brazo a la que la estrella pertenece.
+  * @param index índice de la estrella en el brazo.
+  */
+export function hoverStar(armIndex, index) {
+	galaxyControlUi.displayStarHoveredBox();
+	
+	hoveredStar = index;
+	hoveredArm = armIndex;
+	setHoveredStarName(armIndex + ' | ' + index);
+}
+
+/**
+  * Función para abstraer el seleccionar una estrella,
+  *
+  * @param armIndex índice del brazo a la que la estrella pertenece.
+  * @param index índice de la estrella en el brazo.
+  */
+export function selectStar(armIndex, index) {
+	galaxyControlUi.displayStarSelectedBox();
+	
+	selectedStar = index;
+	selectedArm = armIndex;
+	setSelectedStarName(armIndex + ' | ' + index);
+}
+
+/**
+  * Función para abstraer el dejar de posar sobre una estrella,
+  */
+export function unhoverStar() {
+	hoverStarMesh.visible = false;
+	
+	hoveredStar = -1;
+	hoveredArm = -1;
+	galaxyControlUi.hideStarHoveredBox();
+}
+
+/**
+  * Función para abstraer el dejar de seleccionar una estrella,
+  */
+export function unselectStar() {
+	selectedStarMesh.visible = false;
+		
+	selectedStar = -1;
+	selectedArm = -1;
+	galaxyControlUi.hideStarSelectedBox();
+}
+
+/**
+  * Settter posX.
+  *
+  * @param value el nuevo valor.
+  */
+export function setPosX(value) {
+	posX = value;
+}
+
+/**
+  * Settter posY.
+  *
+  * @param value el nuevo valor.
+  */
+export function setPosY(value) {
+	posY = value;
+}
+
+/**
+  * Settter posZ.
+  *
+  * @param value el nuevo valor.
+  */
+export function setPosZ(value) {
+	posZ = value;
+}
+
+/**
+  * Settter distance.
+  *
+  * @param value el nuevo valor.
+  */
+export function setDistance(value) {
+	distance = value;
+}
+
+/**
   * Settter dirX.
   *
   * @param newDir el nuevo valor de dirX.
@@ -693,12 +1012,33 @@ export function setDirY(newDir) {
 }
 
 /**
+  * Settter dirSpeedX.
+  *
+  * @param value el nuevo valor de dirSpeedX.
+  */
+export function setDirSpeedX(value) {
+	dirSpeedX = value;
+}
+
+/**
   * Settter hoveredStar.
   *
   * @param newDir el nuevo valor.
   */
 export function setHoveredStar(value) {
 	hoveredStar = value;
+}
+
+/**
+  * Settter hoveredStarName.
+  *
+  * @param value el nuevo valor.
+  */
+export function setHoveredStarName(value) {
+	hoveredStarName = value;
+	
+	// Actualizar estado de la UI.
+	galaxyControlUi.starHoveredBox.querySelector('span.star-name').textContent = hoveredStarName;
 }
 
 /**
@@ -717,6 +1057,18 @@ export function setHoveredArm(value) {
   */
 export function setSelectedStar(value) {
 	selectedStar = value;
+}
+
+/**
+  * Settter selectedStarName.
+  *
+  * @param value el nuevo valor.
+  */
+export function setSelectedStarName(value) {
+	selectedStarName = value;
+	
+	// Actualizar estado de la UI.
+	galaxyControlUi.starSelectedBox.querySelector('span.star-name').textContent = selectedStarName;
 }
 
 /**
@@ -747,10 +1099,91 @@ export function setVisitedStarsPos(value) {
 }
 
 /**
+  * Settter visitedStarsLines.
+  *
+  * @param value el nuevo valor.
+  */
+export function setVisitedStarsLines(value) {
+	visitedStarsLines = value;
+}
+
+/**
   * Settter visitedStarsLinesColors.
   *
   * @param value el nuevo valor.
   */
 export function setVisitedStarsLinesColors(value) {
 	visitedStarsLinesColors = value;
+}
+
+/**
+  * Settter regenerateAnimation.
+  *
+  * @param value el nuevo valor.
+  */
+export function setRegenerateAnimation(value) {
+	regenerateAnimation = value;
+}
+
+/**
+  * Settter regenerateAnimationSeed.
+  *
+  * @param value el nuevo valor.
+  */
+export function setRegenerateAnimationSeed(value) {
+	regenerateAnimationSeed = value;
+}
+
+/**
+  * Settter reachTarget.
+  *
+  * @param value el nuevo valor.
+  */
+export function setReachTarget(value) {
+	reachTarget = value;
+}
+
+/**
+  * Settter posXTarget.
+  *
+  * @param value el nuevo valor.
+  */
+export function setPosXTarget(value) {
+	posXTarget = value;
+}
+
+/**
+  * Settter posYTarget.
+  *
+  * @param value el nuevo valor.
+  */
+export function setPosYTarget(value) {
+	posYTarget = value;
+}
+
+/**
+  * Settter posZTarget.
+  *
+  * @param value el nuevo valor.
+  */
+export function setPosZTarget(value) {
+	posZTarget = value;
+}
+
+/**
+  * Settter distanceTarget.
+  *
+  * @param value el nuevo valor.
+  */
+export function setDistanceTarget(value) {
+	distanceTarget = value;
+}
+
+/**
+  * Settter dirX.
+  *
+  * @param newDir el nuevo valor de dirX.
+  */
+export function setDirXTarget(newDir) {
+	dirXTarget = newDir;
 }

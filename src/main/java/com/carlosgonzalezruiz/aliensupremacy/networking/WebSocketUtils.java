@@ -13,6 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.carlosgonzalezruiz.aliensupremacy.constant.GameConstants;
+import com.carlosgonzalezruiz.aliensupremacy.game.client.ThreadClient;
 
 /**
  * Alien Supremacy - Proyecto Fin de Ciclo
@@ -31,7 +32,10 @@ import com.carlosgonzalezruiz.aliensupremacy.constant.GameConstants;
  * @author Carlos González Ruiz - 2ºDAM
  */
 public class WebSocketUtils {
-
+	
+	/** Logger */
+	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ThreadClient.class);
+	
 	/**
 	 * Método constructor de la clase.
 	 */
@@ -119,8 +123,15 @@ public class WebSocketUtils {
 		listResponse.add(code);
 
 		// Indicar longitud del mensaje (esta aplicacion solo tiene soporte para 256
-		// bytes)
-		listResponse.add((byte) message.length());
+		// bytes y 2^16 bytes)
+		
+		if (message.length() > 127) {
+			listResponse.add((byte) 126);
+			listResponse.add((byte) (message.length() >> 8));
+			listResponse.add((byte) (message.length() & 255));
+		} else {
+			listResponse.add((byte) message.length());
+		}
 
 		// Codificar mensaje mediante las claves.
 		for (int i = 0; i < message.length(); ++i) {
@@ -154,10 +165,10 @@ public class WebSocketUtils {
 		byte initialLength = (byte) (in.read() - 128); // Para obtener la logitud del mensaje, restar - 128 (establecer
 														// a 0 el bit mayor).
 		int finalLength;
-
+		
 		switch (initialLength) {
 		case 126: // Short.
-			finalLength = (in.read() << 8) + in.read();
+			finalLength = ((in.read() << 8) + in.read());
 			break;
 		case 127: // Long (Sin soporte para esta aplicación Java)
 			finalLength = 0;
@@ -169,7 +180,7 @@ public class WebSocketUtils {
 
 		// Clave para decodificar el mensaje.
 		byte[] key = new byte[] { (byte) (in.read()), (byte) (in.read()), (byte) (in.read()), (byte) (in.read()) };
-
+		
 		if (finalLength > 0) {
 			// Mensaje codificado.
 			byte[] binMessage = in.readNBytes(finalLength);
@@ -179,7 +190,7 @@ public class WebSocketUtils {
 				out.append((char) (binMessage[i] ^ key[i & 0x3]));
 			}
 		}
-
+		
 		return out.toString();
 	}
 
