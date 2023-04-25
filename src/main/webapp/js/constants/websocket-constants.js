@@ -4,7 +4,7 @@
   */
 
 /** Dirección del servidor principal. */
-export const SERVER_ADDRESS = 'ws://192.168.1.42:42000';
+export const SERVER_ADDRESS = 'wss://192.168.1.42:42000';
 
 /* Cliente → Servidor */
 
