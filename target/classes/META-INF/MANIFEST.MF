@@ -1,6 +1,40 @@
 Manifest-Version: 1.0
 Build-Jdk-Spec: 17
+Class-Path: lib/spring-boot-starter-data-jpa-3.0.2.jar lib/spring-boot-s
+ tarter-aop-3.0.2.jar lib/spring-aop-6.0.4.jar lib/aspectjweaver-1.9.19.
+ jar lib/spring-boot-starter-jdbc-3.0.2.jar lib/HikariCP-5.0.1.jar lib/s
+ pring-jdbc-6.0.4.jar lib/hibernate-core-6.1.6.Final.jar lib/jakarta.per
+ sistence-api-3.1.0.jar lib/jakarta.transaction-api-2.0.1.jar lib/jboss-
+ logging-3.5.0.Final.jar lib/hibernate-commons-annotations-6.0.2.Final.j
+ ar lib/jandex-2.4.2.Final.jar lib/classmate-1.5.1.jar lib/byte-buddy-1.
+ 12.22.jar lib/jaxb-runtime-4.0.1.jar lib/jaxb-core-4.0.1.jar lib/angus-
+ activation-1.0.0.jar lib/txw2-4.0.1.jar lib/istack-commons-runtime-4.1.
+ 1.jar lib/jakarta.inject-api-2.0.0.jar lib/antlr4-runtime-4.10.1.jar li
+ b/spring-data-jpa-3.0.1.jar lib/spring-data-commons-3.0.1.jar lib/sprin
+ g-orm-6.0.4.jar lib/spring-context-6.0.4.jar lib/spring-tx-6.0.4.jar li
+ b/spring-beans-6.0.4.jar lib/jakarta.annotation-api-2.1.1.jar lib/slf4j
+ -api-2.0.6.jar lib/spring-aspects-6.0.4.jar lib/spring-boot-starter-thy
+ meleaf-3.0.2.jar lib/spring-boot-starter-3.0.2.jar lib/spring-boot-3.0.
+ 2.jar lib/spring-boot-autoconfigure-3.0.2.jar lib/spring-boot-starter-l
+ ogging-3.0.2.jar lib/logback-classic-1.4.5.jar lib/logback-core-1.4.5.j
+ ar lib/log4j-to-slf4j-2.19.0.jar lib/log4j-api-2.19.0.jar lib/jul-to-sl
+ f4j-2.0.6.jar lib/snakeyaml-1.33.jar lib/thymeleaf-spring6-3.1.1.RELEAS
+ E.jar lib/thymeleaf-3.1.1.RELEASE.jar lib/attoparser-2.0.6.RELEASE.jar 
+ lib/unbescape-1.1.6.RELEASE.jar lib/spring-boot-starter-web-3.0.2.jar l
+ ib/spring-boot-starter-json-3.0.2.jar lib/jackson-databind-2.14.1.jar l
+ ib/jackson-annotations-2.14.1.jar lib/jackson-core-2.14.1.jar lib/jacks
+ on-datatype-jdk8-2.14.1.jar lib/jackson-datatype-jsr310-2.14.1.jar lib/
+ jackson-module-parameter-names-2.14.1.jar lib/spring-boot-starter-tomca
+ t-3.0.2.jar lib/tomcat-embed-core-10.1.5.jar lib/tomcat-embed-el-10.1.5
+ .jar lib/tomcat-embed-websocket-10.1.5.jar lib/spring-web-6.0.4.jar lib
+ /micrometer-observation-1.10.3.jar lib/micrometer-commons-1.10.3.jar li
+ b/spring-webmvc-6.0.4.jar lib/spring-expression-6.0.4.jar lib/lombok-1.
+ 18.24.jar lib/mysql-connector-j-8.0.32.jar lib/postgresql-42.2.10.jar l
+ ib/jakarta.xml.bind-api-4.0.0.jar lib/jakarta.activation-api-2.1.1.jar 
+ lib/spring-core-6.0.4.jar lib/spring-jcl-6.0.4.jar
 Implementation-Title: Alien Supremacy
 Implementation-Version: 0.1-Alpha
+Main-Class: com.carlosgonzalezruiz.aliensupremacy.AlienSupremacyWebAppli
+ cation
 Created-By: Maven Integration for Eclipse
 
