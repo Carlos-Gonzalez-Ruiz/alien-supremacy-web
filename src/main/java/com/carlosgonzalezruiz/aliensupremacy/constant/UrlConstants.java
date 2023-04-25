@@ -20,7 +20,7 @@ public final class UrlConstants {
 	/** Ruta para el fichero index.html */
 	public static final String INDEX_HTML = "index.html";
 	/** Ruta para el fichero genericError.html (error genérico) */
-	public static final String GENERIC_ERROR_HTML = "error/genericError.html";
+	public static final String GENERIC_ERROR_HTML = "error/generic-error.html";
 
 	/**
 	 * Método constructor de la clase.
