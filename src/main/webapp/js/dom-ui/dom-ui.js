@@ -205,6 +205,16 @@ export function getHeight(element) {
 }
 
 /**
+  * Función para obtener si se está mostrando o no cierto elemento.
+  *
+  * @param element el elemento.
+  * @return la visibilidad del elemento.
+  */
+export function getVisibility(element) {
+	return (element.style.display != 'none')
+}
+
+/**
   * Función de bucle del módulo.
   */
 export function update() {

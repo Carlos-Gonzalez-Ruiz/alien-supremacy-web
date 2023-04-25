@@ -63,13 +63,13 @@ button.main-menu:hover {
 }
 
 
-/** Tabla de salas. */
-table.rooms tr {
+/** Tabla de salas, tabla de usuarios. */
+table.rooms tr, table.users tr {
 	transition: 0.2s;
 }
 
-/** Tabla de salas. (hover) */
-table.rooms tr:hover {
+/** Tabla de salas, tabla de usuarios. (hover) */
+table.rooms tr:hover, table.users tr:hover {
 	cursor: pointer;
 	background-color: #FFF7
 }

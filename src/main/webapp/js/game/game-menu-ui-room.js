@@ -50,7 +50,7 @@ function initDomUi() {
 							<h2><i class="bi bi-question-lg"></i> Test room</h2>
 						</div>
 					</div>
-					<div class="box" style="margin-bottom: 1em; height: calc(50vh - 4em * 2.5); overflow: scroll; text-align: center;">
+					<div class="box" style="margin-bottom: 1em; height: calc(50vh - 4em * 2.5); overflow: auto; text-align: center;">
 						<h3>Game mode</h3>
 						<p>Supremacy</p>
 						<br>
@@ -80,8 +80,10 @@ function initDomUi() {
 								</div>
 								<div class="chat-content" style="height: calc(100% - 6.5em);">
 									<div class="box-content" style="height: 100%;">
+										<!--
 										<div><span class="chat-username">User 1234 →</span> This is a chat :)</div>
 										<div><span class="chat-username">User 12345 →</span> Hi!!</div>
+										-->
 									</div>
 									<div style="display: flex; align-items: center; gap: 1em; margin: 1em 0em;">
 										<div style="flex: 100%;">
@@ -102,9 +104,11 @@ function initDomUi() {
 								</div>
 								<div class="box-content" style="height: calc(100% - 3em);">
 									<table class="users">
+										<!--
 										<tr>
 											<td>SirVladem</td>
 										</tr>
+										-->
 									</table>
 								</div>
 							</div>
@@ -145,7 +149,9 @@ function initDomUi() {
 		hideSpectatorBox();
 		hideRoomBox();
 		
+		gameMenuUi.hideAccountBox();
 		gameMenuUi.hideGalaxyNameBox();
+		gameMenuUi.displayAccountBox();
 		
 		// Mostrar elementos de gameControl.
 		gameControlUi.displayChatBox();
@@ -164,23 +170,28 @@ function initDomUi() {
 		<button data-title="Go spectator mode" class="game spectator-mode"><i class="bi bi-eye-fill"></i> Spectate</button>
 	`);
 	spectatorBox.onclick = function() {
-		hideStartGameBox();
-		hideSpectatorBox();
-		hideRoomBox();
-
-		// Mostrar elementos.	
-		displayExitSpectatorBox();
-		
-		// Mostrar elementos de gameControl.
-		gameControlUi.displayChatBox();
-		
-		// Terminar fase de menú.
-		game.setMainMenu(false);
-		// Ponerse en modo espectador.
-		game.setSpectatorMode(true);
-		
-		// Reproducir sonido.
-		audio.soundGameStart2.play();
+		// Comprobar visibilidad.
+		if (domUi.getVisibility(spectatorBox) && !domUi.getVisibility(exitSpectatorBox)) {
+			// Mostrar elementos.
+			displayExitSpectatorBox();
+			
+			// Mostrar elementos de gameControl.
+			gameControlUi.displayChatBox();
+			
+			// Terminar fase de menú.
+			game.setMainMenu(false);
+			// Ponerse en modo espectador.
+			game.setSpectatorMode(true);
+			
+			// Reproducir sonido.
+			audio.soundGameStart2.play();
+			
+			hideStartGameBox();
+			hideSpectatorBox();
+			hideRoomBox();
+			
+			gameMenuUi.hideAccountBox();
+		}
 	}
 	elements.push(spectatorBox);
 	
@@ -189,22 +200,26 @@ function initDomUi() {
 		<button data-title="Exit spectator mode" class="game"><i class="bi bi-door-open-fill"></i> Exit</button>
 	`);
 	exitSpectatorBox.onclick = function() {
-		// Mostrar elementos.
-		displayStartGameBox();
-		displaySpectatorBox();
-		displayRoomBox();
-		
-		gameMenuUi.displayGalaxyNameBox();
-		
-		// Esconder elementos.
-		hideExitSpectatorBox();
-		
-		// Esconder elementos de gameControl.
-		gameControlUi.hideChatBox();
-		
-		// Volver a fase de menú.
-		game.setMainMenu(true);
-		game.setSpectatorMode(false);
+		// Comprobar visibilidad.
+		if (!domUi.getVisibility(spectatorBox) && domUi.getVisibility(this)) {
+			// Mostrar elementos.
+			displayStartGameBox();
+			displaySpectatorBox();
+			displayRoomBox();
+			
+			gameMenuUi.displayAccountBox();
+			gameMenuUi.displayGalaxyNameBox();
+			
+			// Esconder elementos de gameControl.
+			gameControlUi.hideChatBox();
+			
+			// Volver a fase de menú.
+			game.setMainMenu(true);
+			game.setSpectatorMode(false);
+			
+			// Esconder elementos.
+			hideExitSpectatorBox();
+		}
 	}
 	elements.push(startGameBox);
 }

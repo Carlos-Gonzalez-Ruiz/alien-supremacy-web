@@ -16,9 +16,9 @@ import * as galaxyControl from '/js/game/scene/galaxy-control.js';
 /** Lista de elementos. */
 let elements = [];
 /** Caja para ver estrella. */
-let starHoveredBox;
+export let starHoveredBox;
 /** Caja para viajar a estrella. */
-let starSelectedBox;
+export let starSelectedBox;
 
 /** Indicar si se debe mostrar la UI (cuando sea su nivel) */
 let displayUi = false;
@@ -38,9 +38,9 @@ function initDomUi() {
 	starHoveredBox = domUi.createElement(`
 		<div class="box-arrow">
 			<div style="color: white;">
-				<span class="star-name box-title">
-					<span class="icon icon-large">❂</span>
-					Star name
+				<span class="box-title">
+					<i class="bi bi-stars"></i>
+					<span class="star-name"></span>
 				</span>
 			</div>
 		</div>
@@ -51,9 +51,9 @@ function initDomUi() {
 	starSelectedBox = domUi.createElement(`
 		<div class="box-arrow">
 			<div style="color: white;">
-				<span class="star-name box-title">
-					<span class="icon icon-large">❂</span>
-					Star name
+				<span class="box-title">
+					<i class="bi bi-stars"></i>
+					<span class="star-name"></span>
 				</span>
 				<button class="game goto-star">Go</button>
 			</div>

@@ -52,7 +52,7 @@ function initDomUi() {
 		">
 			<div class="box-title">
 				<span class="icon">🗨</span>
-				Room chat <span class="chat-new-messages">(5)</span>
+				Room chat <span class="chat-new-messages">(0)</span>
 				<button class="game chat-hide" style="float: right;">▾</button>
 			</div>
 			<div class="chat-content"
@@ -65,7 +65,7 @@ function initDomUi() {
 					min-height: 135px;
 					max-height: 135px;
 				">
-					<div><span class="chat-username">User 1234 →</span> This is a chat :)</div>
+					<!-- <div><span class="chat-username">User 1234 →</span> This is a chat :)</div>
 					<div><span class="chat-username">User 12345 →</span> Hi!!</div>
 					<div><span class="chat-username">User 12345 →</span> Hi!!</div>
 					<div><span class="chat-username">User 12345 →</span> Hi!!</div>
@@ -81,7 +81,7 @@ function initDomUi() {
 					<div><span class="chat-username">User 12345 →</span> Hi!!</div>
 					<div><span class="chat-username">User 12345 →</span> Hi!!</div>
 					<div><span class="chat-username">User 12345 →</span> Hi!!</div>
-					<div><span class="chat-username">User 12345 →</span> Hi!!</div>
+					<div><span class="chat-username">User 12345 →</span> Hi!!</div> -->
 				</div>
 				<div style="display: flex; align-items: center; gap: 15px;">
 					<div style="flex: 100%;">

@@ -34,8 +34,11 @@ export let viewLevel = gameConstants.VIEW_LEVEL_GALAXY;
 /** Aceleración de la gravedad. */
 export let gravityAcc = 0.03;
 
-/** Nombre del usuario. */
-export let username;
+/** Datos del usuario. */
+export let user = {
+	userId: -1,
+	username: 'Guest'
+};
 
 /**
   * Función de inicialización del módulo.
@@ -199,8 +202,23 @@ export function setMainMenu(value) {
 	galaxyControl.selectedStarMesh.visible = !value;
 	galaxyControl.pointerMesh.visible = !value;
 	
+	// Viajar a galaxia en caso de que no lo este.
+	gotoGalaxy();
+	
+	// Deselecionar elementos.
+	galaxyControl.unhoverStar();
+	galaxyControl.unselectStar();
+	
+	starSystemControl.unhoverPlanet();
+	starSystemControl.unselectPlanet();
+	
 	// Establecer valores iniciales en caso de estar en el menú principal.
 	if (mainMenu) {
+		// Dejar de mostrar elementos.
+		galaxyControl.hoverStarMesh.visible = false;
+		galaxyControl.selectedStarMesh.visible = false;
+		galaxyControl.pointerMesh.visible = false;
+		
 		galaxyControl.setPosXTarget(0);
 		galaxyControl.setPosYTarget(0);
 		galaxyControl.setPosZTarget(0);
@@ -222,10 +240,12 @@ export function setSpectatorMode(value) {
 }
 
 /**
-  * Settter username.
+  * Settter user. Adicionalmente, actualiza el estado de la UI.
   *
   * @param value el nuevo valor.
   */
-export function setUsername(value) {
-	username = value;
+export function setUser(value) {
+	user = value;
+	
+	gameMenuUi.accountBox.querySelector('span.name').textContent = user.username;
 }

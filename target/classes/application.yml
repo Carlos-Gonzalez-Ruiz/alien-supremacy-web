@@ -20,9 +20,14 @@ spring:
           sharedCache:
             mode: ALL # https://github.com/spring-projects/spring-data-jpa/issues/2717
   datasource:
-    driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306
-    username: root
-    password: rootroot
+    #driverClassName: com.mysql.cj.jdbc.Driver
+    #url: jdbc:mysql://sql204.epizy.com:3306/epiz_33652975_zoosevilla
+    #username: epiz_33652975
+    #password: 8k9ooBquBaq2
+    platform: postgres
+    url: jdbc:postgresql://dpg-ch421eb3cv21aod8bf00-a.frankfurt-postgres.render.com/alien_supremacy
+    username: alien_supremacy_admin
+    password: LIJJTKn0aP4Ye4KYZB0CF3nEpjjvOX0k
+    driverClassName: org.postgresql.Driver
   thymeleaf:
     check-template-location: false

@@ -26,8 +26,12 @@ let raycasterPointer = new THREE.Vector2(0, 0);
 
 /** Planeta dónde se ha posado el ratón. */
 export let hoveredPlanet = -1;
+/** Nombre del planeta en dónde se ha posado el ratón. */
+export let hoveredPlanetName = '';
 /** Planeta seleccionada. */
 export let selectedPlanet = -1;
+/** Nombre del planeta seleccionado. */
+export let selectedPlanetName = '';
 /** Posición del planeta seleccionada anteriormente. (para actualizado de la UI) */
 let selectedPlanetPrevPos = new THREE.Vector3();
 
@@ -397,13 +401,11 @@ function userInterface() {
 		
 		// Mostrar datos de estrella.
 		if (selectedPlanet != index) {
-			starSystemControlUi.displayPlanetHoveredBox();
-			
-			hoveredPlanet = index;
+			hoverPlanet(index);
 		}
 		
 		// Seleccionar estrella.
-		if (galaxyControl.hoveredStar == -1 && galaxyControl.selectedStar == -1 && keyboard.checkMouseButtonPressedOnce(keyboardConstants.MB_LEFT)) {
+		if (!keyboard.onDomUI && galaxyControl.hoveredStar == -1 && galaxyControl.selectedStar == -1 && keyboard.checkMouseButtonPressedOnce(keyboardConstants.MB_LEFT)) {
 			if (selectedPlanet != index) {
 				// Establecer tamaño de selección.
 				selectedPlanetMaterial.size = starSystem.collisionMeshes[index].scale.x * 2.3;
@@ -414,39 +416,27 @@ function userInterface() {
 				selectedPlanetMesh.position.z = starSystem.collisionMeshes[index].position.z;
 				
 				// Dejar de mostrar caja de posar sobre estrella.
-				hoveredPlanet = -1;
-				starSystemControlUi.hidePlanetHoveredBox();
+				unhoverPlanet();
 				
 				// Mostrar caja de selección.
-				starSystemControlUi.displayPlanetSelectedBox();
-				
-				selectedPlanet = index;
+				selectPlanet(index);
 			} else {
 				// Deseleccionar al hacer click otra vez.
-				selectedPlanetMesh.visible = false;
-				
-				selectedPlanet = -1;
-				starSystemControlUi.hidePlanetSelectedBox();
+				unselectPlanet();
 			}
 		}
 	}
 	
 	// Función para cuando no ocurra una intersección-
 	function noIntersectionOccurs() {
-		hoverPlanetMesh.visible = false;
-		
 		// Dejar de mostrar datos de estrella.
-		if (hoveredPlanet != -1) {
-			hoveredPlanet = -1;
-			starSystemControlUi.hidePlanetHoveredBox();
+		if (hoveredPlanet != -1 || hoverPlanetMesh.visible) {
+			unhoverPlanet();
 		}
 		
 		// Deseleccionar estrella.
 		if (keyboard.checkMouseButtonPressedOnce(keyboardConstants.MB_LEFT) && selectedPlanet != -1) {
-			selectedPlanetMesh.visible = false;
-			
-			selectedPlanet = -1;
-			starSystemControlUi.hidePlanetSelectedBox();
+			unselectPlanet();
 		}
 	}
 	
@@ -461,7 +451,7 @@ function userInterface() {
 		raycaster.far = maxDistance;
 		
 		let intersections = raycaster.intersectObjects(starSystem.groupCollision.children, true);
-		if (!gameControl.selecting && galaxyControl.hoveredStar == -1 && galaxyControl.selectedStar == -1 && intersections.length > 0) {
+		if (!keyboard.onDomUI && !gameControl.selecting && galaxyControl.hoveredStar == -1 && galaxyControl.selectedStar == -1 && intersections.length > 0) {
 			let index = intersections[0].object.name;
 			
 			if (index != null) {
@@ -557,6 +547,50 @@ export function resetAll() {
 }
 
 /**
+  * Función para abstraer el posar sobre una estrella,
+  *
+  * @param index índice de la estrella en el brazo.
+  */
+export function hoverPlanet(index) {
+	starSystemControlUi.displayPlanetHoveredBox();
+	
+	hoveredPlanet = index;
+	setHoveredPlanetName(index);
+}
+
+/**
+  * Función para abstraer el seleccionar un planeta,
+  *
+  * @param index índice del planeta.
+  */
+export function selectPlanet(index) {
+	starSystemControlUi.displayPlanetSelectedBox();
+	
+	selectedPlanet = index;
+	setSelectedPlanetName(index);
+}
+
+/**
+  * Función para abstraer el dejar de posar sobre un planeta.
+  */
+export function unhoverPlanet() {
+	hoverPlanetMesh.visible = false;
+	
+	hoveredPlanet = -1;
+	starSystemControlUi.hidePlanetHoveredBox();
+}
+
+/**
+  * Función para abstraer el dejar de seleccionar un planeta.
+  */
+export function unselectPlanet() {
+	selectedPlanetMesh.visible = false;
+		
+	selectedPlanet = -1;
+	starSystemControlUi.hidePlanetSelectedBox();
+}
+
+/**
   * Función para ir a la estrella siguiente del histórico de estrellas visitadas.
   */
 export function goPrevStar() {
@@ -634,4 +668,28 @@ export function setPosZ(value) {
   */
 export function setSelectedPlanet(value) {
 	selectedPlanet = value;
+}
+
+/**
+  * Settter hoveredPlanetName.
+  *
+  * @param value el nuevo valor.
+  */
+export function setHoveredPlanetName(value) {
+	hoveredPlanetName = value;
+	
+	// Actualizar estado de la UI.
+	starSystemControlUi.planetHoveredBox.querySelector('span.planet-name').textContent = hoveredPlanetName;
+}
+
+/**
+  * Settter selectedPlanetName.
+  *
+  * @param value el nuevo valor.
+  */
+export function setSelectedPlanetName(value) {
+	selectedPlanetName = value;
+	
+	// Actualizar estado de la UI.
+	starSystemControlUi.planetSelectedBox.querySelector('span.planet-name').textContent = selectedPlanetName;
 }

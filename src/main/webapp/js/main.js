@@ -9,6 +9,9 @@ import * as keyboard from '/js/keyboard/keyboard.js';
 import * as game from '/js/game/game.js';
 import * as gameMenuUi from '/js/game/game-menu-ui.js';
 
+/** Indicar si está cargando todavía recursos. */
+export let loaded = false;
+
 /**
   * Función de inicialización del main.
   */
@@ -37,8 +40,7 @@ export function updateLoop() {
   * Función de carga de página.
   */
 document.body.onload = function() {
-	// Mostrar caja de pedir datos de usuario.
-	gameMenuUi.displayLogInBox();
+	loaded = true;
 	gameMenuUi.hideLoadingBox();
 }
 

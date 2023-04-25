@@ -13,7 +13,7 @@ public final class GameConstants {
 	/** Puerto del que se instanciará el servidor de juego. */
 	public static final int SERVER_PORT = 42000;
 	/** Tiempo en milisegundos que esperan los hilos cliente. */
-	public static final int SERVER_TICK_RATE = 16*0+1000;
+	public static final int SERVER_TICK_RATE = 16*0+100;
 
 	/** Código de mensaje para comunicación por texto. (text frame) */
 	public static final byte CODE_TEXT = (byte) 128 | 0x1;

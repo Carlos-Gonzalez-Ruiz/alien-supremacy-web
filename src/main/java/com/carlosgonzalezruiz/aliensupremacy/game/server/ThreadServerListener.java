@@ -1,5 +1,7 @@
 package com.carlosgonzalezruiz.aliensupremacy.game.server;
 
+import java.util.ConcurrentModificationException;
+
 import com.carlosgonzalezruiz.aliensupremacy.constant.GameConstants;
 import com.carlosgonzalezruiz.aliensupremacy.game.AbstractThread;
 import com.carlosgonzalezruiz.aliensupremacy.game.client.ThreadClient;
@@ -38,22 +40,26 @@ public class ThreadServerListener extends AbstractThread {
 	@Override
 	public void run() {
 		while (server.getRunning()) {
-			for (ThreadClient c : server.getClients()) {
-				// Eliminar hilos cliente fantasma (connected = false)
-				if (!c.getConnected()) {
-					try {
-						c.join();
-						server.getClients().remove(c);
-						
-						log.info("Eliminated ghost client thread.");
-					} catch (InterruptedException e) {
-						Thread.currentThread().interrupt();
-						e.printStackTrace();
+			try {
+				for (ThreadClient c : server.getClients()) {
+					// Eliminar hilos cliente fantasma (connected = false)
+					if (!c.getConnected()) {
+						try {
+							c.join();
+							server.getClients().remove(c);
+							
+							log.info("Eliminated ghost client thread.");
+						} catch (InterruptedException e) {
+							Thread.currentThread().interrupt();
+							e.printStackTrace();
+						}
 					}
 				}
+				
+				sleepThread(GameConstants.SERVER_TICK_RATE);
+			} catch (ConcurrentModificationException e) {
+				log.info("Got concurrent modification exception.");
 			}
-			
-			sleepThread(GameConstants.SERVER_TICK_RATE);
 		}
 	}
 

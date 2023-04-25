@@ -42,51 +42,61 @@ function initDomUi() {
 							<p>Achieve the alien supremacy in the galaxy!</p>
 						</div>
 					</div>
-					<div class="box" style="max-height: calc(100vh - 4em * 2.5 - 2em - 10em); overflow: scroll;">
-						<div style="text-align: center;">
-							<h3>Network & graphics programming</h3>
-							<p>Carlos González</p>
-							<br>
+					<div class="box" style="max-height: calc(100vh - 4em * 2.5 - 2em - 10em); overflow: auto; text-align: center;">
+						<div style="display: flex">
+							<div style="flex: 1">
+								<h3>Network & graphics programming</h3>
+								<p>Carlos González</p>
+								<br>
+								
+								<h3>Game design</h3>
+								<p>Carlos González</p>
+								<br>
+								
+								<h3>UI/UX Design</h3>
+								<p>Carlos González</p>
+								<br>
+							</div>
 							
-							<h3>Game design</h3>
-							<p>Carlos González</p>
-							<br>
+							<div style="flex: 1">
+								<h3>Music</h3>
+								<p>
+									Menu: <i><a href="https://www.newgrounds.com/audio/listen/991299">Cant Sleep anymore</a></i> - ImSoAlive <br>
+									Game: <i><a href="https://www.newgrounds.com/audio/listen/382131">Right Through</a></i> - pyrotek45 <br>
+								</p>
+								<br>
+								
+								<h3>Sound effects</h3>
+								<p>
+									<i><a href="https://freesound.org/people/MATRIXXX_/sounds/658266/">slide</a></i> - MATRIXXX_ <br>
+									<i><a href="https://freesound.org/people/MATRIXXX_/sounds/657948/">chat</a></i> - MATRIXXX_ <br>
+									<i><a href="https://freesound.org/people/nezuai/sounds/582594/">click</a></i> - nezuai <br>
+									<i><a href="https://freesound.org/people/Erokia/sounds/470208/">click2</a></i> - Erokia <br>
+									<i><a href="https://freesound.org/people/Divoljud/sounds/520579/">hover</a></i> - Divoljud <br>
+									<i><a href="https://freesound.org/people/TheAtomicBrain/sounds/351878/">game-start</a></i> - TheAtomicBrain <br>
+									<i><a href="https://freesound.org/people/jalastram/sounds/361887/">game-start2</a></i> - jalastram <br>
+								</p>
+								<br>
+							</div>
 							
-							<h3>UI/UX Design</h3>
-							<p>Carlos González</p>
-							<br>
-							
-							<h3>Music</h3>
-							<p>
-								Menu: <i><a href="https://www.newgrounds.com/audio/listen/991299">Cant Sleep anymore</a> - ImSoAlive <br>
-								Game: <i><a href="https://www.newgrounds.com/audio/listen/382131">Right Through</a> - pyrotek45 <br>
-							</p>
-							<br>
-							
-							<h3>Sound effects</h3>
-							<p>
-								<i><a href="https://freesound.org/people/MATRIXXX_/sounds/658266/">slide</a></i> - MATRIXXX_ <br>
-								<i><a href="https://freesound.org/people/MATRIXXX_/sounds/657948/">chat</a></i> - MATRIXXX_ <br>
-								<i><a href="https://freesound.org/people/nezuai/sounds/582594/">click</a></i> - nezuai <br>
-								<i><a href="https://freesound.org/people/Erokia/sounds/470208/">click2</a></i> - Erokia <br>
-								<i><a href="https://freesound.org/people/Divoljud/sounds/520579/">hover</a></i> - Divoljud <br>
-								<i><a href="https://freesound.org/people/TheAtomicBrain/sounds/351878/">game-start</a></i> - TheAtomicBrain <br>
-								<i><a href="https://freesound.org/people/jalastram/sounds/361887/">game-start2</a></i> - jalastram <br>
-							</p>
-							<br>
-							
-							<h3>Third party</h3>
-							<p>
-								Three.js</br>
-								Howler.js</br>
-								Spring Framework</br>
-								Bootstrap icons</br>
-								Animate.css</br>
-							<br>
-							
-							<h3>Fonts</h3>
-							<p>...</p>
-							<br>
+							<div style="flex: 1">
+								<h3>Third party</h3>
+								<p>
+									Three.js</br>
+									Howler.js</br>
+									Spring Framework</br>
+									Bootstrap icons</br>
+									Animate.css</br>
+								<br>
+								
+								<h3>Fonts</h3>
+								<p>
+									Ubuntu</br>
+									Abel</br>
+									Orbitron</br>
+								</p>
+								<br>
+							</div>
 						</div>
 					</div>
 				</div>

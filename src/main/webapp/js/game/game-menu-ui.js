@@ -2,7 +2,11 @@
   * Módulo para el menú del juego.
   */
 
+import * as main from '/js/main.js';
+
 import * as domUi from '/js/dom-ui/dom-ui.js';
+
+import * as keyboard from '/js/keyboard/keyboard.js';
 
 import * as game from '/js/game/game.js';
 import * as audio from '/js/game/audio.js';
@@ -24,7 +28,7 @@ let refreshButtonBox;
 /** Caja de nombre de galaxia. */
 export let galaxyNameBox;
 /** Caja de cuenta actual. */
-let accountBox;
+export let accountBox;
 /** Caja de visualizar cuenta. */
 let viewAccountBox;
 /** Caja transparente que bloquea toda la pantalla. */
@@ -35,10 +39,14 @@ let blackBox;
 let logInBox;
 /** Caja de cargando. */
 let loadingBox;
+/** Caja popup de mensaje. */
+let popupBox;
 
 /** Indicar si se debe mostrar la UI. */
 let displayUi = false;
 
+/** Indicar si ha iniciado sesión. */
+let accountLogged = false;
 /** Indicar si se está visualizando una cuenta. */
 let viewingAccount = false;
 
@@ -76,6 +84,7 @@ export function init() {
 	// Adicionalmente, preguntar por nombre de usuario.
 	displayBlackBox(false);
 	displayLoadingBox();
+	displayLogInBox();
 	
 	// Cargar sonido.
 	backgroundMusic = new Howl({
@@ -109,6 +118,9 @@ function initDomUi() {
 		
 		// Reproducir sonido.
 		audio.soundClick.play();
+		
+		// Establecer conexión con el servidor principal.
+		gameMenuUiJoinRoom.startWebsocket();
 	};
 	mainMenuBox.querySelector('button.join-room').onmouseenter = function () {
 		audio.soundHover.play();
@@ -183,14 +195,11 @@ function initDomUi() {
 	// Caja de cuenta actual.
 	accountBox = domUi.createElement(`
 		<div class="box-account">
-			<i class="bi bi-person-circle"></i> <span class="name">Guest</span>
+			<i class="bi bi-person-circle"></i> <span class="name"></span>
 		</div>
 	`);
 	accountBox.querySelector('div.box-account').onclick = function() {
 		viewAccount(accountBox.querySelector('span.name').textContent, -1);
-		
-		// Reproducir sonido.
-		audio.soundClick2.play();
 	};
 	elements.push(accountBox);
 	
@@ -221,6 +230,8 @@ function initDomUi() {
 	transparentBox.onclick = function() {
 		if (viewingAccount) {
 			closeViewAccount();
+		} else { // En caso contrario, hacer lo equivalente a presionar el botón de cerrar pop-up.
+			popupBox.querySelector('button.close').click();
 		}
 	};
 	elements.push(transparentBox);
@@ -248,10 +259,14 @@ function initDomUi() {
 		
 		// Validar datos de entrada localmente. (Se recomienda migrar al servidor más tarde)
 		if (!!newUsername) {
-			game.setUsername(newUsername);
+			accountLogged = true;
+			let newUser = {
+				userId: -1,
+				username: newUsername
+			};
+			game.setUser(newUser);
 			
 			// Esconder elementos.
-			hideBlackBox();
 			hideLogInBox();
 			
 			// Sonar música de fondo.
@@ -269,30 +284,48 @@ function initDomUi() {
 		<h3 style="color: #AAA; text-align: center; width: 100vw;">LOADING ...</h3>
 	`);
 	elements.push(loadingBox);
+	
+	// Caja de popup.
+	popupBox = domUi.createScrollableElement(`
+		<div class="box" style="width: 300px;">
+			<div style="display: flex; align-items: center;">
+				<div style="flex: 0;">
+					<button data-title="Close" class="game close"><i class="bi bi-x-lg"></i></i></button>
+				</div>
+				<div style="flex: fit-content;">
+					<h2 class="title" style="margin: unset; text-align: center;"></h2>
+				</div>
+			</div>
+			<p class="content" style="text-align: center;"></p>
+			<div style="text-align: center;">
+				<button data-title="Close" class="game ok">OK</button>
+			</div>
+		</div>
+	`);
+	elements.push(popupBox);
 }
 
 /**
   * Función de bucle del módulo.
   */
 export function update() {
-	/*// Comprobrar que esté en el menú principal.
-	if (game.mainMenu) {
-		if (!displayUi) {
-			displayUi = true;
-			
-			// Simplemente actualizando la UI, se muestra lo justo y necesario.
-			cameraOnUpdate();
+	// Esconder todo finalmente tras cargar e iniciar sesión.
+	if (main.loaded && accountLogged) {
+		hideBlackBox();
+	}
+	
+	gameMenuUiJoinRoom.update();
+	gameMenuUiPlayerSettings.update();
+	gameMenuUiVisualSettings.update();
+	gameMenuUiAbout.update();
+	gameMenuUiRoom.update();
+	
+	// Ejecutar hacer click en el transparent box si se presiona enter cuando transparent box es visible.
+	if (domUi.getVisibility(transparentBox)) {
+		if (keyboard.checkPressedOnce('Enter')) {
+			transparentBox.click();
 		}
-	} else {
-		if (displayUi) {
-			displayUi = false;
-			
-			// Esconder todos los elementos.
-			for (let i = 0; i < elements.length; ++i) {
-				domUi.hideElement(elements[i]);
-			}
-		}
-	}*/
+	}
 }
 
 /**
@@ -309,6 +342,9 @@ export function viewAccount(name, uid) {
 	
 	// Indicar que se está viendo una cuenta.
 	viewingAccount = true;
+	
+	// Reproducir sonido.
+	audio.soundClick2.play()
 }
 
 /**
@@ -527,6 +563,52 @@ export function hideLoadingBox() {
 }
 
 /**
+  * Función para refactorizar el mostrar popupBox.
+  *
+  * @param title el título del mensaje.
+  * @param content el contenido del mensaje.
+  * @param onClose función anómima que se ejecuta tras cerrar el pop-up.
+  */
+export function displayPopupBox(title, content, onClose) {
+	displayTransparentBox();
+
+	// Establecer contenido.
+	popupBox.querySelector('h2.title').textContent = title;
+	popupBox.querySelector('p.content').textContent = content;
+	popupBox.querySelector('button.close').onclick = popupBox.querySelector('button.ok').onclick = function() {
+		onClose();
+		hidePopupBox();
+	};
+	
+	// Mostrar contenido.
+	domUi.displayElement(
+		popupBox,
+		'calc(50vw - ' + domUi.getWidth(popupBox) / 2 + 'px)',
+		'calc(50vh - ' + domUi.getHeight(popupBox) / 2 + 'px)',
+		200
+	);
+	domUi.setAnimation(popupBox, 'fadeIn', '0.25s');
+	
+	// Reproducir sonido.
+	audio.soundClick2.play()
+}
+
+/**
+  * Función para refactorizar el dejar de mostrar popupBox.
+  */
+export function hidePopupBox() {
+	hideTransparentBox();
+	
+	let time = '0.25'; // Tiempo en segundos.
+	
+	domUi.setAnimation(popupBox, 'fadeOut', time + 's');
+	// Esconder tras un tiempo.
+	setTimeout(function() {
+		domUi.hideElement(popupBox);
+	}, time * 1000);
+}
+
+/**
   * Callback de actualización cuando la cámara sea actualizada.
   */
 export function cameraOnUpdate() {
@@ -534,4 +616,18 @@ export function cameraOnUpdate() {
 	if (displayUi) {
 		// ...
 	}
+}
+
+/**
+  * Función para ir al menú. TODO
+  */
+export function goToMenu() {
+	displayMainMenuBox();
+	displayRefreshButtonBox();
+	displayGalaxyNameBox();
+	
+	gameMenuUiJoinRoom.hideJoinRoomBox();
+	
+	// Reproducir sonido.
+	audio.soundClick2.play();
 }

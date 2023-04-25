@@ -5,7 +5,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.carlosgonzalezruiz.aliensupremacy.game.server.ThreadServer;
-import com.carlosgonzalezruiz.aliensupremacy.game.server.ThreadServerListener;
 
 /**
  * Alien Supremacy - Proyecto Fin de Ciclo
@@ -40,13 +39,10 @@ public class AlienSupremacyWebApplication implements CommandLineRunner {
 
 		// Iniciar servidor.
 		ThreadServer threadServer = new ThreadServer();
-		ThreadServerListener threadServerListener = new ThreadServerListener(threadServer);
 		threadServer.start();
-		threadServerListener.start();
 
 		// Esperar a que termine el servidor.
 		try {
-			threadServerListener.join();
 			threadServer.join();
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();

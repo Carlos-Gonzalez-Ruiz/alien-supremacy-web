@@ -29,10 +29,14 @@ let raycasterPointer = new THREE.Vector2(0, 0);
 
 /** Estrella dónde se ha posado el ratón. */
 export let hoveredStar = -1;
+/** Nombre de la estrella en dónde se ha posado el ratón. */
+export let hoveredStarName = '';
 /** Brazo dónde se ha posado el ratón. */
 export let hoveredArm = -1;
 /** Estrella seleccionada. */
 export let selectedStar = -1;
+/** Nombre de la estrella seleccionada. */
+export let selectedStarName = '';
 /** Posición de la estrella seleccionada anteriormente. (para actualizado de la UI) */
 let selectedStarPrevPos = new THREE.Vector3();
 /** Indicar tiempo máximo de selección para hacer doble-click. (milisegundos) */
@@ -665,10 +669,7 @@ function userInterface() {
 			
 			// Mostrar datos de estrella.
 			if (selectedArm != armIndex || selectedStar != index) {
-				galaxyControlUi.displayStarHoveredBox();
-				
-				hoveredStar = index;
-				hoveredArm = armIndex;
+				hoverStar(armIndex, index);
 			}
 			
 			// Seleccionar estrella.
@@ -681,15 +682,10 @@ function userInterface() {
 					selectedStarMesh.position.z = vertex.z;
 					
 					// Dejar de mostrar caja de posar sobre estrella.
-					hoveredStar = -1;
-					hoveredArm = -1;
-					galaxyControlUi.hideStarHoveredBox();
+					unhoverStar();
 					
 					// Mostrar caja de selección.
-					galaxyControlUi.displayStarSelectedBox();
-					
-					selectedStar = index;
-					selectedArm = armIndex;
+					selectStar(armIndex, index);
 					
 					// Indicar tiempo en el que fue seleccionado.
 					selectedStarTimestampLimit = Date.now() + selectedStarTimestampMax;
@@ -698,33 +694,21 @@ function userInterface() {
 					game.gotoStarSystemSave(galaxy.starData[selectedArm][selectedStar]);
 				} else {
 					// Deseleccionar al hacer click otra vez, si ha pasado el tiempo de selección.
-					selectedStarMesh.visible = false;
-					
-					selectedStar = -1;
-					selectedArm = -1;
-					galaxyControlUi.hideStarSelectedBox();
+					unselectStar();
 				}
 			}
 		}
 		
 		// Función para cuando no ocurra una intersección-
 		function noIntersectionOccurs() {
-			hoverStarMesh.visible = false;
-			
 			// Dejar de mostrar datos de estrella.
-			if (hoveredStar != -1) {
-				hoveredStar = -1;
-				hoveredArm = -1;
-				galaxyControlUi.hideStarHoveredBox();
+			if (hoveredStar != -1 || hoverStarMesh.visible) {
+				unhoverStar();
 			}
 			
 			// Deseleccionar estrella.
 			if (keyboard.checkMouseButtonPressedOnce(keyboardConstants.MB_LEFT) && selectedStar != -1) {
-				selectedStarMesh.visible = false;
-				
-				selectedStar = -1;
-				selectedArm = -1;
-				galaxyControlUi.hideStarSelectedBox();
+				unselectStar();
 			}
 		}
 		
@@ -924,6 +908,56 @@ function destroyVisitedStar() {
 }
 
 /**
+  * Función para abstraer el posar sobre una estrella,
+  *
+  * @param armIndex índice del brazo a la que la estrella pertenece.
+  * @param index índice de la estrella en el brazo.
+  */
+export function hoverStar(armIndex, index) {
+	galaxyControlUi.displayStarHoveredBox();
+	
+	hoveredStar = index;
+	hoveredArm = armIndex;
+	setHoveredStarName(armIndex + ' | ' + index);
+}
+
+/**
+  * Función para abstraer el seleccionar una estrella,
+  *
+  * @param armIndex índice del brazo a la que la estrella pertenece.
+  * @param index índice de la estrella en el brazo.
+  */
+export function selectStar(armIndex, index) {
+	galaxyControlUi.displayStarSelectedBox();
+	
+	selectedStar = index;
+	selectedArm = armIndex;
+	setSelectedStarName(armIndex + ' | ' + index);
+}
+
+/**
+  * Función para abstraer el dejar de posar sobre una estrella,
+  */
+export function unhoverStar() {
+	hoverStarMesh.visible = false;
+	
+	hoveredStar = -1;
+	hoveredArm = -1;
+	galaxyControlUi.hideStarHoveredBox();
+}
+
+/**
+  * Función para abstraer el dejar de seleccionar una estrella,
+  */
+export function unselectStar() {
+	selectedStarMesh.visible = false;
+		
+	selectedStar = -1;
+	selectedArm = -1;
+	galaxyControlUi.hideStarSelectedBox();
+}
+
+/**
   * Settter posX.
   *
   * @param value el nuevo valor.
@@ -996,6 +1030,18 @@ export function setHoveredStar(value) {
 }
 
 /**
+  * Settter hoveredStarName.
+  *
+  * @param value el nuevo valor.
+  */
+export function setHoveredStarName(value) {
+	hoveredStarName = value;
+	
+	// Actualizar estado de la UI.
+	galaxyControlUi.starHoveredBox.querySelector('span.star-name').textContent = hoveredStarName;
+}
+
+/**
   * Settter hoveredArm.
   *
   * @param newDir el nuevo valor.
@@ -1011,6 +1057,18 @@ export function setHoveredArm(value) {
   */
 export function setSelectedStar(value) {
 	selectedStar = value;
+}
+
+/**
+  * Settter selectedStarName.
+  *
+  * @param value el nuevo valor.
+  */
+export function setSelectedStarName(value) {
+	selectedStarName = value;
+	
+	// Actualizar estado de la UI.
+	galaxyControlUi.starSelectedBox.querySelector('span.star-name').textContent = selectedStarName;
 }
 
 /**

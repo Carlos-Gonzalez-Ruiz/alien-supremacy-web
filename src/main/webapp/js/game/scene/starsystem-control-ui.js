@@ -19,9 +19,9 @@ let elements = [];
 /** Caja para volver a galaxia. */
 let goBackBox;
 /** Caja para ver planeta. */
-let planetHoveredBox;
+export let planetHoveredBox;
 /** Caja para ver detalles planeta. */
-let planetSelectedBox;
+export let planetSelectedBox;
 
 /** Indicar si se debe mostrar la UI (cuando sea su nivel) */
 let displayUi = false;
@@ -39,12 +39,16 @@ export function init() {
 function initDomUi() {
 	// Caja para volver a galaxia.
 	goBackBox = domUi.createElement(`
-		<div class="box">
-			<div style="color: white;">
-				<button class="game goto-galaxy">Go to galaxy</button>
-				<button class="game goto-back">←</button>
-				<button class="game goto-next">→</button>
-			</div>
+		<div style="margin: 1em">
+			<button class="game gray goto-galaxy" data-title="Go to galaxy">
+				<i class="bi bi-arrow-up-left"></i>
+			</button>
+			<button class="game goto-back">
+				<i class="bi bi-arrow-90deg-left"></i>
+			</button>
+			<button class="game goto-next">
+				<i class="bi bi-arrow-90deg-right"></i>
+			</button>
 		</div>
 	`);
 	goBackBox.querySelector('button.goto-galaxy').onclick = function() {
@@ -62,7 +66,10 @@ function initDomUi() {
 	planetHoveredBox = domUi.createElement(`
 		<div class="box-arrow">
 			<div style="color: white;">
-				<span class="box-title planet-name">Planet name</span>
+				<span class="box-title">
+					<i class="bi bi-globe"></i>
+					<span class="planet-name"></span>
+				</span>
 			</div>
 		</div>
 	`);
@@ -72,11 +79,18 @@ function initDomUi() {
 	planetSelectedBox = domUi.createElement(`
 		<div class="box-arrow">
 			<div style="color: white;">
-				<span class="box-title planet-name">Planet name</span>
+				<span class="box-title">
+					<i class="bi bi-globe"></i>
+					<span class="planet-name"></span>
+				</span>
 				<br>
-				<button class="game colonize-planet">Colonize</button>
 				<br>
-				<button class="game build-combat-ship">Build combat ship</button>
+				<button class="game colonize-planet" data-title="Colonize">
+					<i class="bi bi-house-door-fill"></i>
+				</button>
+				<button class="game build-combat-ship" data-title="Build combat ship">
+					<i class="bi bi-rocket-fill"></i>
+				</button>
 			</div>
 		</div>
 	`);
