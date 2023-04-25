@@ -1,0 +1,87 @@
+/**
+  * CSS global.
+  */
+
+/** Cambiar color de selección. */
+::selection {
+	color: white;
+	background: darkgray;
+}
+
+/** HTML por defecto. */
+html {
+	font-family: 'Ubuntu', 'Liberation Sans', sans-serif;
+	font-size: small;
+}
+
+/** No permitir la selección en ciertos elementos de DOM UI. */
+div#dom-ui-div, .unselectable {
+	user-select: none;
+}
+
+/** Estilizar cajas de entrada de usuario. */
+input[type="text"] {
+	color: white;
+	transition: 0.2s;
+}
+
+/** Estilizar cajas de entrada de usuario. (focus) */
+input[type="text"]:focus {
+	outline: none;
+	box-shadow: white 0px 0px 10px;
+}
+
+/** Title hover */
+[data-title]:hover:after {
+	opacity: 1;
+	transition: all 0.2s ease 0.5s;
+	visibility: visible;
+}
+[data-title]:after {
+	font-family: 'Ubuntu', sans-serif;
+	font-size: medium;
+	font-weight: bold;
+	
+	content: attr(data-title);
+	position: absolute;
+	bottom: -1.6em;
+	left: 100%;
+	padding: 4px 4px 4px 8px;
+	color: #222;
+	white-space: nowrap;
+	border-radius: 5px;
+	box-shadow: 0px 0px 4px #222;
+	background-image: -webkit-linear-gradient(top, #f8f8f8aa, #cccccc);  
+	z-index: 999;
+	visibility: hidden;
+	
+	opacity: 0;
+	transition: 0.2s;
+}
+[data-title] {
+	position: relative;
+	transition: 0.2s;
+}
+
+/** Title para tablas. */
+table [data-title]:after {
+	position: fixed;
+	bottom: unset;
+	left: unset;
+}
+
+/** Estilizar hr */
+hr {
+	color: #FFF;
+}
+
+/** Estilizar enlaces. */
+a {
+	color: #FFF;
+	transition: 0.2s;
+}
+
+/** Estilizar enlaces. (hover) */
+a:hover {
+	color: #F00;
+}

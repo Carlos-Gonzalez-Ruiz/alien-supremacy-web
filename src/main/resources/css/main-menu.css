@@ -1,0 +1,127 @@
+/**
+  * CSS del menú principal.
+  */
+
+/** Fondo del menú principal. */
+div.main-menu {
+	background-image: linear-gradient(-45deg, #0000, 80%, #FFFA);
+	padding-top: 10px;
+}
+
+/** Título del menú. */
+h1.main-menu {
+	font-family: 'Orbitron', sans-serif;
+	font-size: xxx-large;
+	font-weight: bold;
+	
+	padding-left: 100px;
+	
+	/*color: #FFF;*/
+	
+	background: -webkit-linear-gradient(#FFF, #AAF, #000);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	
+	text-shadow: #FFFA 0px 0px 30px;
+}
+
+/** Botones del menú. */
+button.main-menu {
+	display: block;
+	
+	padding-left: 1000px;
+	margin: 1.2em;
+	
+	border: 1px solid #555;
+	border-radius: 0px 20px 20px 0px;
+	box-shadow: #FFFF5555 0px 0px 5px;
+	
+	color: #FFF;
+	font-family: 'Ubuntu', sans-serif;
+	font-size: large;
+	font-weight: bold;
+	
+	padding: 0.5em 1.5em;
+	padding-left: 100px;
+	background-color: #0055;
+	background-image: linear-gradient(270deg, #77F5, #0000), linear-gradient( 0deg, #77F5, #0000, #0000);
+	
+	transition: 0.2s;
+}
+
+/** Botones del menú. Hover */
+button.main-menu:hover {
+	cursor: pointer;
+	
+	box-shadow: #FFFF55FF 0px 0px 5px;
+	
+	color: #AFF;
+	
+	border: 1px solid #FFF;
+	
+	padding-left: 150px;
+}
+
+
+/** Tabla de salas, tabla de usuarios. */
+table.rooms tr, table.users tr {
+	transition: 0.2s;
+}
+
+/** Tabla de salas, tabla de usuarios. (hover) */
+table.rooms tr:hover, table.users tr:hover {
+	cursor: pointer;
+	background-color: #FFF7
+}
+
+/** Caja de cuenta actual. */
+div.box-account {
+	color: white;
+	
+	border: 1px solid blue;
+	border-top: none;
+	border-radius: 0px 0px 5px 5px;
+	background-color: #5555FF55;
+	padding: 10px;
+	backdrop-filter: blur(10px);
+	
+	transition: 0.2s;
+}
+
+/** Caja de cuenta actual. (hover) */
+div.box-account:hover {
+	border: 1px solid lightskyblue;
+	border-top: none;
+	box-shadow: dodgerblue 0px 0px 10px;
+	cursor: pointer;
+}
+
+/** Bótón de empezar partida. */
+button.start-game {
+	border: 1px solid #F00;
+	color: white;
+	border-radius: 3px;
+	font-family: 'Liberation Sans', sans-serif;
+	font-size: large;
+	font-weight: bold;
+	padding: 3px 8px;
+	background-image: linear-gradient(#F00, #A00);
+	margin: 1px;
+	
+	transition: 0.2s;
+}
+
+/** Botón de empezar partida. (hover) */
+button.start-game:hover {
+	cursor: pointer;
+	border: 1px solid white;
+	box-shadow: gray 0px 0px 10px;
+}
+
+/** Botón de empezar partida. (active) */
+button.start-game:active {
+	color: gray;
+	border: 1px solid gray;
+	background-image: linear-gradient(#A00, #F00);
+	box-shadow: none;
+}
