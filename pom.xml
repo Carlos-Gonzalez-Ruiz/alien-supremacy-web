@@ -11,10 +11,10 @@
 	</parent>
 	
 	<groupId>com.carlosgonzalezruiz</groupId>
-	<artifactId>aliensupremacy</artifactId>
+	<artifactId>aliensupremacyweb</artifactId>
 	<version>0.1-Alpha</version>
-	<name>Alien Supremacy</name>
-	<description></description>
+	<name>Alien Supremacy Web</name>
+	<description>Web server for handling basic user usage, as well as SQL queries.</description>
 	<packaging>jar</packaging>
 	
 	<properties>
@@ -67,50 +67,6 @@
 
 	<build>
 		<plugins>
-			<!--
-	        <plugin>
-	            <groupId>org.apache.maven.plugins</groupId>
-	            <artifactId>maven-jar-plugin</artifactId>
-	            <configuration>
-	                <archive>
-	                    <manifest>
-	                        <addClasspath>true</addClasspath>
-				            <classpathPrefix>lib/</classpathPrefix>
-				            <mainClass>com.carlosgonzalezruiz.aliensupremacy.AlienSupremacyWebApplication</mainClass>
-	                    </manifest>
-	                </archive>
-	            </configuration>
-	        </plugin>
-	        <plugin>
-	            <artifactId>maven-assembly-plugin</artifactId>
-	            <configuration>
-	                <descriptorRefs>
-	                    <descriptorRef>jar-with-dependencies</descriptorRef>
-	                </descriptorRefs>
-	            </configuration>
-	        </plugin>
-	        <plugin>
-		      <groupId>org.springframework.boot</groupId>
-		      <artifactId>spring-boot-maven-plugin</artifactId>
-		      <version>3.0.2.RELEASE</version>
-		      <configuration>
-		      	<addResources>false</addResources>
-		      </configuration>
-		    </plugin>
-		    
-		    <plugin>
-			    <groupId>org.springframework.boot</groupId>
-			    <artifactId>spring-boot-maven-plugin</artifactId>
-			    <version>3.0.2.RELEASE</version>
-			    <executions>
-			        <execution>
-			           <goals>
-			               <goal>repackage</goal>
-			            </goals>
-			        </execution>
-			     </executions>
-			</plugin> -->
-			
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>

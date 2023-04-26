@@ -4,7 +4,7 @@
   */
 
 /** Dirección del servidor principal. */
-export const SERVER_ADDRESS = (location.protocol == 'http:' ? 'ws://' : 'wss://') + location.hostname + ':42000';
+export const SERVER_ADDRESS = (location.protocol == 'http:' ? 'ws://' : 'wss://') + location.hostname;
 
 /* Cliente → Servidor */
 
