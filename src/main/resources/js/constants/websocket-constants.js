@@ -4,7 +4,7 @@
   */
 
 /** Dirección del servidor principal. */
-export const SERVER_ADDRESS = (location.protocol == 'http:' ? 'ws://' : 'wss://') + location.hostname;
+export const SERVER_ADDRESS = (location.protocol == 'http:' ? 'ws://' : 'wss://') + 'alien-supremacy-server.onrender.com';
 
 /* Cliente → Servidor */
 

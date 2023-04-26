@@ -34,7 +34,7 @@ public class AlienSupremacyWebApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) {
 		log.info("Application started...");
-		log.warn("Web backend won't game server anymore due to infrastructure changes.");
+		log.warn("Web backend won't start game server anymore due to infrastructure changes.");
 	}
 
 }
