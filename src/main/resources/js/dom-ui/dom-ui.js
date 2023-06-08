@@ -125,12 +125,20 @@ export function displayElement(element, x, y, z) {
 }
 
 /**
-  * Función para esconder cierto elemento, haciendo un 'element.style.display = 'none''
+  * Función para esconder cierto elemento tras pasar cierto tiempo, haciendo un 'element.style.display = 'none''
   *
   * @param element el elemento a esconder.
+  * @param time el tiempo en segundos. (opcional, por defecto 0 segundos)
   */
-export function hideElement(element) {
-	element.style.display = 'none';
+export function hideElement(element, time) {
+	if (typeof time == "undefined") {
+		element.style.display = 'none';
+	} else {
+		// Esconder tras un tiempo.
+		setTimeout(function() {
+			element.style.display = 'none';
+		}, time * 1000 - 20); // -20 para evitar posible bug de renderizado.
+	}
 }
 
 /**

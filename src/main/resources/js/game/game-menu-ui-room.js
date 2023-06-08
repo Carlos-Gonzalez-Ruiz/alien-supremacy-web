@@ -246,10 +246,7 @@ export function hideRoomBox() {
 	let time = gameMenuUi.MENU_SECTION_ANIMATION_TIME_END; // Tiempo en segundos.
 	
 	domUi.setAnimation(roomBox, 'fadeOutRight', time + 's');
-	// Esconder tras un tiempo.
-	setTimeout(function() {
-		domUi.hideElement(roomBox);
-	}, time * 1000);
+	domUi.hideElement(roomBox, time); // Esconder tras un tiempo.
 }
 
 /**
@@ -267,10 +264,7 @@ export function hideStartGameBox() {
 	let time = gameMenuUi.MENU_SECTION_ANIMATION_TIME_END; // Tiempo en segundos.
 	
 	domUi.setAnimation(startGameBox, 'fadeOutDown', time + 's');
-	// Esconder tras un tiempo.
-	setTimeout(function() {
-		domUi.hideElement(startGameBox);
-	}, time * 1000);
+	domUi.hideElement(startGameBox, time); // Esconder tras un tiempo.
 }
 
 /**
@@ -288,10 +282,7 @@ export function hideSpectatorBox() {
 	let time = gameMenuUi.MENU_SECTION_ANIMATION_TIME_END; // Tiempo en segundos.
 	
 	domUi.setAnimation(spectatorBox, 'fadeOutDown', time + 's');
-	// Esconder tras un tiempo.
-	setTimeout(function() {
-		domUi.hideElement(spectatorBox);
-	}, time * 1000);
+	domUi.hideElement(spectatorBox, time); // Esconder tras un tiempo.
 }
 
 /**
@@ -309,8 +300,5 @@ export function hideExitSpectatorBox() {
 	let time = gameMenuUi.MENU_SECTION_ANIMATION_TIME_END; // Tiempo en segundos.
 	
 	domUi.setAnimation(exitSpectatorBox, 'fadeOutDown', time + 's');
-	// Esconder tras un tiempo.
-	setTimeout(function() {
-		domUi.hideElement(exitSpectatorBox);
-	}, time * 1000);
+	domUi.hideElement(exitSpectatorBox, time); // Esconder tras un tiempo.
 }

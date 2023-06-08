@@ -299,10 +299,7 @@ export function hideJoinRoomBox(animation) {
 	let time = gameMenuUi.MENU_SECTION_ANIMATION_TIME_END; // Tiempo en segundos.
 	
 	domUi.setAnimation(joinRoomBox, typeof animation === 'undefined' ? 'fadeOutRight' : animation, time + 's');
-	// Esconder tras un tiempo.
-	setTimeout(function() {
-		domUi.hideElement(joinRoomBox);
-	}, time * 1000);
+	domUi.hideElement(joinRoomBox, time); // Esconder tras un tiempo.
 }
 
 /**

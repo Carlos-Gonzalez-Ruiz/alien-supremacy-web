@@ -375,10 +375,7 @@ export function hideMainMenuBox() {
 	let time = MAIN_MENU_ANIMATION_TIME_END; // Tiempo en segundos.
 	
 	domUi.setAnimation(mainMenuBox, 'fadeOutLeft', time + 's');
-	// Esconder tras un tiempo.
-	setTimeout(function() {
-		domUi.hideElement(mainMenuBox);
-	}, time * 1000);
+	domUi.hideElement(mainMenuBox, time); // Esconder tras un tiempo.
 }
 
 /**
@@ -396,10 +393,7 @@ export function hideRefreshButtonBox() {
 	let time = MAIN_MENU_ANIMATION_TIME_END; // Tiempo en segundos.
 	
 	domUi.setAnimation(refreshButtonBox, 'fadeOutLeft', time + 's');
-	// Esconder tras un tiempo.
-	setTimeout(function() {
-		domUi.hideElement(refreshButtonBox);
-	}, time * 1000);
+	domUi.hideElement(refreshButtonBox, time); // Esconder tras un tiempo.
 }
 
 /**
@@ -417,10 +411,7 @@ export function hideGalaxyNameBox() {
 	let time = MAIN_MENU_ANIMATION_TIME_END; // Tiempo en segundos.
 	
 	domUi.setAnimation(galaxyNameBox, 'fadeOutDown', time + 's');
-	// Esconder tras un tiempo.
-	setTimeout(function() {
-		domUi.hideElement(galaxyNameBox);
-	}, time * 1000);
+	domUi.hideElement(galaxyNameBox, time);
 }
 
 /**
@@ -461,10 +452,7 @@ export function hideViewAccountBox() {
 	let time = '0.25'; // Tiempo en segundos.
 	
 	domUi.setAnimation(viewAccountBox, 'fadeOutUp', time + 's');
-	// Esconder tras un tiempo.
-	setTimeout(function() {
-		domUi.hideElement(viewAccountBox);
-	}, time * 1000);
+	domUi.hideElement(viewAccountBox, time); // Esconder tras un tiempo.
 }
 
 /**
@@ -482,10 +470,7 @@ export function hideTransparentBox() {
 	let time = '0.25'; // Tiempo en segundos.
 	
 	domUi.setAnimation(transparentBox, 'fadeOut', time + 's');
-	// Esconder tras un tiempo.
-	setTimeout(function() {
-		domUi.hideElement(transparentBox);
-	}, time * 1000);
+	domUi.hideElement(transparentBox, time); // Esconder tras un tiempo.
 }
 
 /**
@@ -509,10 +494,7 @@ export function hideBlackBox() {
 	let time = '0.25'; // Tiempo en segundos.
 	
 	domUi.setAnimation(blackBox, 'fadeOut', time + 's');
-	// Esconder tras un tiempo.
-	setTimeout(function() {
-		domUi.hideElement(blackBox);
-	}, time * 1000);
+	domUi.hideElement(blackBox, time); // Esconder tras un tiempo.
 }
 
 /**
@@ -535,10 +517,7 @@ export function hideLogInBox() {
 	let time = '0.25'; // Tiempo en segundos.
 	
 	domUi.setAnimation(logInBox, 'fadeOutUp', time + 's');
-	// Esconder tras un tiempo.
-	setTimeout(function() {
-		domUi.hideElement(logInBox);
-	}, time * 1000);
+	domUi.hideElement(logInBox, time); // Esconder tras un tiempo.
 }
 
 /**
@@ -556,10 +535,7 @@ export function hideLoadingBox() {
 	let time = '0.25'; // Tiempo en segundos.
 	
 	domUi.setAnimation(loadingBox, 'fadeOut', time + 's');
-	// Esconder tras un tiempo.
-	setTimeout(function() {
-		domUi.hideElement(loadingBox);
-	}, time * 1000);
+	domUi.hideElement(loadingBox, time); // Esconder tras un tiempo.
 }
 
 /**
@@ -602,10 +578,7 @@ export function hidePopupBox() {
 	let time = '0.25'; // Tiempo en segundos.
 	
 	domUi.setAnimation(popupBox, 'fadeOut', time + 's');
-	// Esconder tras un tiempo.
-	setTimeout(function() {
-		domUi.hideElement(popupBox);
-	}, time * 1000);
+	domUi.hideElement(popupBox, time); // Esconder tras un tiempo.
 }
 
 /**

@@ -120,7 +120,16 @@ export function connect() {
 	
 	socket.onclose = function(event) {
 		if (event.wasClean) {
-			console.log("The socket has cleanly closed the connection to the server.");
+			if (connected) { // Si se ha cerrado, pero no se ha llamado a la función de desconexión, ha habido un error.
+				error = true;
+				errorMessage = event;
+				
+				connected = false;
+				
+				console.log("The socket has cleanly closed the connection to the server, but is now closed.");
+			} else {
+				console.log("The socket has cleanly closed the connection to the server.");
+			}
 		} else { // event.wasClean == 1006 → no está conectado.
 			console.log("There was an error while connecting to the server: ");
 			console.log(event);
@@ -134,7 +143,6 @@ export function connect() {
 	socket.onerror = function(error) {
 		console.log("Connection error: ");
 		console.log(error);
-		//alert("Disconnected from server.");
 	};
 }
 

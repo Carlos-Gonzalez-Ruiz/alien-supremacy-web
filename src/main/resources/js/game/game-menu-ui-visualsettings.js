@@ -79,9 +79,6 @@ export function hideVisualSettingsBox() {
 	let time = gameMenuUi.MENU_SECTION_ANIMATION_TIME_END; // Tiempo en segundos.
 	
 	domUi.setAnimation(visualSettingsBox, 'fadeOutRight', time + 's');
-	// Esconder tras un tiempo.
-	setTimeout(function() {
-		domUi.hideElement(visualSettingsBox);
-	}, time * 1000);
+	domUi.hideElement(visualSettingsBox, time); // Esconder tras un tiempo.
 }
 
