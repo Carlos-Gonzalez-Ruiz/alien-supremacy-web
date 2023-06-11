@@ -17,7 +17,7 @@ import * as starSystemControl from '/js/game/scene/starsystem-control.js';
 /** Lista de elementos. */
 let elements = [];
 /** Caja para volver a galaxia. */
-let goBackBox;
+export let goBackBox;
 /** Caja para ver planeta. */
 export let planetHoveredBox;
 /** Caja para ver detalles planeta. */
@@ -39,16 +39,20 @@ export function init() {
 function initDomUi() {
 	// Caja para volver a galaxia.
 	goBackBox = domUi.createElement(`
-		<div style="margin: 1em">
-			<button class="game gray goto-galaxy" data-title="Go to galaxy">
-				<i class="bi bi-arrow-up-left"></i>
-			</button>
-			<button class="game goto-back">
-				<i class="bi bi-arrow-90deg-left"></i>
-			</button>
-			<button class="game goto-next">
-				<i class="bi bi-arrow-90deg-right"></i>
-			</button>
+		<div class="star-title">
+			<div style="display: inline; margin-left: 1em">
+				<button class="game gray goto-galaxy" data-title="Go to galaxy">
+					<i class="bi bi-arrow-up-left"></i>
+				</button>
+				<button class="game goto-back" data-title="Go to previous star system">
+					<i class="bi bi-arrow-90deg-left"></i>
+				</button>
+				<button class="game goto-next" data-title="Go to next star system">
+					<i class="bi bi-arrow-90deg-right"></i>
+				</button>
+			</div>
+			
+			<h1 class="star-title unselectable"> <span class="muted">(unclaimed)</span></h1>
 		</div>
 	`);
 	goBackBox.querySelector('button.goto-galaxy').onclick = function() {
@@ -67,7 +71,7 @@ function initDomUi() {
 		<div class="box-arrow">
 			<div style="color: white;">
 				<span class="box-title">
-					<i class="bi bi-globe"></i>
+					<i class="planet-icon bi bi-globe"></i>
 					<span class="planet-name"></span>
 				</span>
 			</div>
@@ -75,22 +79,43 @@ function initDomUi() {
 	`);
 	elements.push(planetHoveredBox);
 	
-	// Caja para viajar a planet.
+	// Caja para viajar a planeta.
 	planetSelectedBox = domUi.createElement(`
 		<div class="box-arrow">
 			<div style="color: white;">
 				<span class="box-title">
-					<i class="bi bi-globe"></i>
+					<!-- <i class="planet-icon bi bi-globe"></i> -->
+					<i class="planet-icon bi bi-house-door-fill"></i>
 					<span class="planet-name"></span>
 				</span>
-				<br>
-				<br>
-				<button class="game colonize-planet" data-title="Colonize">
-					<i class="bi bi-house-door-fill"></i>
-				</button>
-				<button class="game build-combat-ship" data-title="Build combat ship">
-					<i class="bi bi-rocket-fill"></i>
-				</button>
+				<div style="text-align: center;">
+					<div class="claimed-by-this-player-box">
+						<hr>
+						<div style="margin-bottom: 0.5em;">
+							<button class="game add-building" data-title="Add buidling">
+								<i class="bi bi-building-fill-add"></i>
+							</button>
+							<div class="box-content" style="display: inline;">
+								<i class="bi bi-buildings-fill"></i>
+								<i class="bi bi-buildings-fill"></i>
+								<i class="bi bi-buildings-fill"></i>
+								<i class="bi bi-buildings"></i>
+								<i class="bi bi-buildings"></i>
+							</div>
+						</div>
+						
+						<button class="game colonize-planet" data-title="Build colonize ship">
+							<i class="bi bi-rocket-fill"></i>
+						</button>
+						<button class="game build-combat-ship" data-title="Build combat ship">
+							<i class="bi bi-airplane-engines-fill"></i>
+						</button>
+					</div>
+					<div class="claimed-by-other-player-box" style="color: gray;">
+						<hr>
+						(<span class="claimed-by">unclaimed</span>)
+					</div>
+				</div>
 			</div>
 		</div>
 	`);
@@ -147,17 +172,19 @@ export function displayPlanetHoveredBox() {
 	
 	domUi.displayElement(
 		planetHoveredBox,
-		coords.x + 32 + 'px',
-		(coords.y - elementHeight / 2) + 'px',
+		Math.round(coords.x + 32) + 'px',
+		Math.round(coords.y) + 'px',
 		10
 	);
+	domUi.setAnimation(planetHoveredBox, 'fadeInRight', '0.2s');
 }
 
 /**
   * Función para refactorizar el dejar de mostrar planetHoveredBox.
   */
 export function hidePlanetHoveredBox() {
-	domUi.hideElement(planetHoveredBox);
+	domUi.setAnimation(planetHoveredBox, 'fadeOutRight', '0.2s');
+	domUi.hideElement(planetHoveredBox, 0.2);
 }
 
 /**
@@ -169,17 +196,19 @@ export function displayPlanetSelectedBox() {
 	
 	domUi.displayElement(
 		planetSelectedBox,
-		coords.x + 32 + 'px',
-		(coords.y - elementHeight / 2) + 'px',
+		Math.round(coords.x + 32) + 'px',
+		Math.round(coords.y) + 'px',
 		9
 	);
+	domUi.setAnimation(planetSelectedBox, 'fadeInRight', '0.2s');
 }
 
 /**
   * Función para refactorizar el dejar de mostrar planetSelectedBox.
   */
 export function hidePlanetSelectedBox() {
-	domUi.hideElement(planetSelectedBox);
+	domUi.setAnimation(planetSelectedBox, 'fadeOutRight', '0.2s');
+	domUi.hideElement(planetSelectedBox, 0.2);
 }
 
 /**

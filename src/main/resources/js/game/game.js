@@ -165,7 +165,7 @@ export function gotoStarSystem(data) {
 	starSystem.setCurrentStar(data);
 	
 	// Generar estrella.
-	starSystem.generateStarSystem(data.index, data);
+	starSystem.generateStarSystem(starSystem.getStarGenerationSeed(data.armIndex, data.index), data);
 	
 	// Establecer posición a la estrella para realizar animación.
 	let vertex = graphics.vertexCoordsToWorldCoords(galaxy.starMeshes[starSystem.currentStar.armIndex], starSystem.currentStar.index);

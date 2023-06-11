@@ -152,12 +152,12 @@ export function hideElement(element, time) {
 export function setElementPos(element, x, y, z) {
 	// Coordenadas X.
 	if (typeof x != 'undefined') {
-		element.style.left = x;
+		element.style.left = Math.round(x);
 	}
 	
 	// Coordenadas Y.
 	if (typeof y != 'undefined') {
-		element.style.top = y;
+		element.style.top = Math.round(y);
 	}
 	
 	// Z-index.

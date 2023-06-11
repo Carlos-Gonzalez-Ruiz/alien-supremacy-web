@@ -68,3 +68,42 @@ button.gray:active {
 .chat-system {
 	color: #AAA;
 }
+
+/** Fondo del título de la estrella. */
+div.star-title {
+	background-image: linear-gradient(-3deg, #00F0, 60%, #FFFA);
+}
+
+/** Título del título de la estrella. */
+h1.star-title {
+	display: inline;
+	
+	font-family: 'Orbitron', sans-serif;
+	font-size: xx-large;
+	font-weight: bold;
+	
+	padding-left: 25px;
+	padding-right: 25px;
+	
+	background: -webkit-linear-gradient(#FFF, #FCA, #000);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	
+	text-shadow: #FFFA 0px 0px 30px;
+}
+
+/** Texto en gris del título de la estrella. */
+h1.star-title span.muted {
+	font-family: 'Orbitron', sans-serif;
+	font-size: medium;
+	font-weight: bold;
+	
+	padding-left: 10px;
+	padding-right: 10px;
+	
+	background: -webkit-linear-gradient(#FFF, #FFF, #000);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	
+	text-shadow: #FFFA 0px 0px 30px;
+}

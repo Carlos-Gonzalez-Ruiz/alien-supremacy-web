@@ -50,13 +50,13 @@ export function get1() {
   * @param newSeed la nueva semilla.
   */
 export function setSeed1(newSeed) {
-	// Permitir que se puedan usar 
+	// Permitir que se puedan usar valores con pequeñas variaciones.
 	if (newSeed >= 0 && newSeed <= 1) {
 		newSeed *= SIZE;
 	}
 	
 	// Capar valores decimales.
-	if (newSeed == Math.floor(newSeed)) {
+	if (newSeed != Math.floor(newSeed)) {
 		newSeed += (newSeed - Math.floor(newSeed)) * SIZE;
 	}
 	

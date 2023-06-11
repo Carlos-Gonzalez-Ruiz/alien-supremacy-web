@@ -11,7 +11,7 @@ import * as gameControl from '/js/game/game-control.js';
 
 /** Lista de elementos. */
 let elements = [];
-/** Caja de selección. */
+/** Caja de selección de tropas. */
 let selectBox;
 /** Caja de chat. */
 let chatBox;
@@ -51,21 +51,22 @@ function initDomUi() {
 			box-sizing: border-box;
 		">
 			<div class="box-title">
-				<span class="icon">🗨</span>
+				<i class="bi bi-chat-fill"></i>
 				Room chat <span class="chat-new-messages">(0)</span>
 				<button class="game chat-hide" style="float: right;">▾</button>
 			</div>
 			<div class="chat-content"
 			 style="
 				min-height: 180px;
-				max-height: 180px;
 			">
 				<div class="box-content"
 				 style="
 					min-height: 135px;
 					max-height: 135px;
+					width: calc(100% - 12px);
 				">
-					<!-- <div><span class="chat-username">User 1234 →</span> This is a chat :)</div>
+					<!--
+					<div><span class="chat-username">User 1234 →</span> This is a chat :)</div>
 					<div><span class="chat-username">User 12345 →</span> Hi!!</div>
 					<div><span class="chat-username">User 12345 →</span> Hi!!</div>
 					<div><span class="chat-username">User 12345 →</span> Hi!!</div>
@@ -81,8 +82,10 @@ function initDomUi() {
 					<div><span class="chat-username">User 12345 →</span> Hi!!</div>
 					<div><span class="chat-username">User 12345 →</span> Hi!!</div>
 					<div><span class="chat-username">User 12345 →</span> Hi!!</div>
-					<div><span class="chat-username">User 12345 →</span> Hi!!</div> -->
+					<div><span class="chat-username">User 12345 →</span> Hi!!</div>
+					-->
 				</div>
+				<br>
 				<div style="display: flex; align-items: center; gap: 15px;">
 					<div style="flex: 100%;">
 						<input style="width: 100%;" type="text" class="box-content chat-send-message" placeholder="...">
@@ -141,7 +144,7 @@ export function update() {
   * Función para refactorizar el mostrar chatBox.
   */
 export function displayChatBox() {
-	domUi.displayElement(chatBox, (graphics.canvas.width - domUi.getWidth(chatBox)) + 'px', 0 + 'px', 20);
+	domUi.displayElement(chatBox, 'calc(100vw - ' + domUi.getWidth(chatBox) + 'px)', 0 + 'px', 20);
 }
 
 /**

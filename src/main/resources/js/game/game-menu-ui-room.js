@@ -151,7 +151,7 @@ function initDomUi() {
 		
 		gameMenuUi.hideAccountBox();
 		gameMenuUi.hideGalaxyNameBox();
-		gameMenuUi.displayAccountBox();
+		gameMenuUi.hideAccountBox();
 		
 		// Mostrar elementos de gameControl.
 		gameControlUi.displayChatBox();
