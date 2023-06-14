@@ -3,6 +3,7 @@
   */
 
 import * as THREE from '/js/libs/three.module.js';
+import { OBJLoader } from '/js/libs/OBJLoader.js';
 
 import * as keyboardConstants from '/js/constants/keyboard-constants.js';
 
@@ -26,6 +27,9 @@ export let selectPosY = 0;
 /** Indicar si se está haciendo selección de tropa. */
 export let selecting = false;
 
+/** Texture de nave. */
+let spaceshipTexture;
+
 /** Lista de naves de combate. */
 export let combatShips = [];
 
@@ -35,6 +39,11 @@ export let combatShips = [];
 export function init() {
 	// Interfaz.
 	gameControlUi.init();
+	
+	// Texturas.
+	spaceshipTexture = new THREE.TextureLoader().load('/image/spaceship.png');
+	spaceshipTexture.wrapS = spaceshipTexture.wrapT = THREE.RepeatWrapping;
+	spaceshipTexture.minFilter = spaceshipTexture.magFilter = graphics.filtering;
 }
 
 /**
@@ -138,10 +147,29 @@ export function cameraOnUpdate() {
 }
 
 /**
+  * Función para liberar de la memoria una nave de combate.
+  * 
+  * @param index el índice de la nave a eliminar.
+  */
+export function destroyCombatShipMemory(index) {
+	let combatShip = combatShips[i];
+	
+	combatShip.material.dispose();
+	scene.remove(combatShip);
+	
+	combatShip.splice(i, 1);
+}
+
+/**
  * Función para liberar de la memoria del módulo.
  */
 export function destroy() {
+	spaceshipTexture.dispose();
 	
+	for (let i = 0; i < combatShips.length; ++i) {
+		combatShips[i].material.dispose();
+		scene.remove(combatShips[i]);
+	}
 }
 
 /**
@@ -166,25 +194,55 @@ export function createCombatShip(starData, planetData) {
 	combatShip.starData = starData;
 	
 	// Representación gráfica.
-	combatShip.geometry = new THREE.BoxGeometry(10, 10, 10);
-	combatShip.material = new THREE.MeshLambertMaterial();
-	combatShip.mesh = new THREE.Mesh(combatShip.geometry, combatShip.material);
-	combatShip.mesh.position.x = starSystem.groupPlanets[planetData.index].position.x;
-	combatShip.mesh.position.y = starSystem.groupPlanets[planetData.index].position.y + 30;
-	combatShip.mesh.position.z = starSystem.groupPlanets[planetData.index].position.z;
-	
-	// Añadir a la escena.
-	starSystem.view.scene.add(combatShip.mesh);
-	
-	// Añadir a la lista.
-	combatShips.push(combatShip);
+	let loader = new OBJLoader();
+
+	// Cargar modelo.
+	loader.load(
+		'/models/spaceship.obj',
+		
+		function (object) {
+			combatShip.material = new THREE.MeshLambertMaterial({
+				map: spaceshipTexture
+			});
+			combatShip.mesh = object;
+			combatShip.mesh.position.x = starSystem.groupPlanets[planetData.index].position.x;
+			combatShip.mesh.position.y = starSystem.groupPlanets[planetData.index].position.y + 30;
+			combatShip.mesh.position.z = starSystem.groupPlanets[planetData.index].position.z;
+			
+			// Aplicar material.
+			combatShip.mesh.traverse(function(child) {
+				if (child instanceof THREE.Mesh) {
+					child.material = combatShip.material;
+				}
+			});
+			
+			starSystem.view.scene.add(combatShip.mesh);
+			
+			// Añadir a la lista.
+			combatShips.push(combatShip);
+		},
+		
+		function (xhr) {
+			//console.log(( xhr.loaded / xhr.total * 100 ) + '% loaded');
+		},
+		
+		function (error) {
+			console.log('An error ocurred:');
+			console.log(error);
+		}
+	);
 }
 
 /**
   * Función para destruir una nave de combate.
+  * 
+  * @param index el índice de la nave a eliminar.
   */
 export function destroyCombatShip(index) {
-
+	// Mostrar animación y ejecutar sonido.
+	
+	// Eliminar de la memoria.
+	destroyCombatShipMemory(index);
 }
 
 /**

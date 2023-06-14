@@ -9,11 +9,14 @@ import * as keyboardConstants from '/js/constants/keyboard-constants.js';
 
 import * as graphics from '/js/graphics/graphics.js';
 import * as keyboard from '/js/keyboard/keyboard.js';
+import * as random from '/js/random/random.js';
 
 import * as game from '/js/game/game.js';
 import * as gameControl from '/js/game/game-control.js';
 
 import * as line from '/js/game/line.js';
+
+import * as nameGenerator from '/js/game/name-generator.js';
 
 import * as galaxy from '/js/game/scene/galaxy.js';
 import * as galaxyControlUi from '/js/game/scene/galaxy-control-ui.js';
@@ -29,14 +32,14 @@ let raycasterPointer = new THREE.Vector2(0, 0);
 
 /** Estrella dónde se ha posado el ratón. */
 export let hoveredStar = -1;
-/** Nombre de la estrella en dónde se ha posado el ratón. */
-export let hoveredStarName = '';
+/** Datos de la estrella en dónde se ha posado el ratón. */
+export let hoveredStarData = '';
 /** Brazo dónde se ha posado el ratón. */
 export let hoveredArm = -1;
 /** Estrella seleccionada. */
 export let selectedStar = -1;
-/** Nombre de la estrella seleccionada. */
-export let selectedStarName = '';
+/** Datos de la estrella seleccionada. */
+export let selectedStarData = '';
 /** Posición de la estrella seleccionada anteriormente. (para actualizado de la UI) */
 let selectedStarPrevPos = new THREE.Vector3();
 /** Indicar tiempo máximo de selección para hacer doble-click. (milisegundos) */
@@ -691,7 +694,8 @@ function userInterface() {
 					selectedStarTimestampLimit = Date.now() + selectedStarTimestampMax;
 				} else if (Date.now() < selectedStarTimestampLimit) {
 					// Comprobar si esta dentro del tiempo de selección.
-					game.gotoStarSystemSave(galaxy.starData[selectedArm][selectedStar]);
+					//game.gotoStarSystemSave(hoveredStarData/*galaxy.starData[selectedArm][selectedStar]*/);
+					game.gotoStarSystemSave(generateStarData(selectedArm, selectedStar));
 				} else {
 					// Deseleccionar al hacer click otra vez, si ha pasado el tiempo de selección.
 					unselectStar();
@@ -723,26 +727,34 @@ function userInterface() {
 			raycaster.far = maxDistance;
 			
 			let intersections = raycaster.intersectObjects(galaxy.starMeshes, false);
-			if (!keyboard.onDomUI && !gameControl.selecting && intersections.length > 0) {
-				let armIndex = intersections[0].object.name;
-				let index = intersections[0].index;
+			if (	(starSystemControl.hoveredPlanet == -1 && starSystemControl.selectedPlanet == -1) &&
+				!gameControl.selecting &&
+				intersections.length > 0) {
 				
-				// Si se está dentro de un sistema estelar, obtener siguiente intersección.
-				if (game.viewLevel == gameConstants.VIEW_LEVEL_STARSYSTEM) {
-					if (intersections.length > 1) {
-						armIndex = intersections[1].object.name;
-						index = intersections[1].index;
-					} else {
-						armIndex = null;
-						index = null;
+					let armIndex = intersections[0].object.name;
+					let index = intersections[0].index;
+					
+					// Si se está dentro de un sistema estelar, obtener siguiente intersección.
+					if (game.viewLevel == gameConstants.VIEW_LEVEL_STARSYSTEM) {
+						if (intersections.length > 1) {
+							armIndex = intersections[1].object.name;
+							index = intersections[1].index;
+						} else {
+							armIndex = null;
+							index = null;
+						}
 					}
-				}
+					
+					if (	(armIndex != null && index != null) &&
+						(!keyboard.onDomUI || // Arreglar bug cursor.
+						 (Math.abs(keyboard.cursorDeltaX) < 10 && Math.abs(keyboard.cursorDeltaY) < 10) )) {
+						
+							intersectionOccurs(armIndex, index);
+						
+					} else {
+						noIntersectionOccurs();
+					}
 				
-				if (armIndex != null && index != null) {
-					intersectionOccurs(armIndex, index);
-				} else {
-					noIntersectionOccurs();
-				}
 			} else {
 				noIntersectionOccurs();
 			}
@@ -908,6 +920,34 @@ function destroyVisitedStar() {
 }
 
 /**
+  * Función para abstraer el proceso de generar los datos de una estrella.
+  * 
+  * @param armIndex índice del brazo a la que la estrella pertenece.
+  * @param index índice de la estrella en el brazo.
+  * @param generatePlanets flag para indicar si se desea generar los planetas. Opcional. Valor por defecto 'false'
+  * @return un objeto con los datos de la estrella generada.
+  */
+export function generateStarData(armIndex, index, generatePlanets = false) {
+	// Objeto de datos.
+	let data = structuredClone(galaxy.starData[armIndex][index]);
+	
+	// Generar nombre.
+	random.setSeed(starSystem.getStarGenerationSeed(data.armIndex, data.index));
+	data.name = nameGenerator.generateWithouthNumber();
+	
+	// Generar planetas. (Requiere tener el nombre de antemano)
+	random.setSeed(starSystem.getStarGenerationSeed(data.armIndex, data.index));
+	if (generatePlanets) {
+		data.planets = starSystem.generatePlanetData(data);
+	}
+	
+	// Generar constante solar.
+	data.solarConstant = 0.5 + random.get() + 1.5;
+	
+	return data;
+}
+
+/**
   * Función para abstraer el posar sobre una estrella,
   *
   * @param armIndex índice del brazo a la que la estrella pertenece.
@@ -918,7 +958,9 @@ export function hoverStar(armIndex, index) {
 	
 	hoveredStar = index;
 	hoveredArm = armIndex;
-	setHoveredStarName(armIndex + ' | ' + index);
+	
+	// Generar y establecer datos de estrella.
+	setHoveredStarData(generateStarData(armIndex, index, false));
 }
 
 /**
@@ -932,7 +974,9 @@ export function selectStar(armIndex, index) {
 	
 	selectedStar = index;
 	selectedArm = armIndex;
-	setSelectedStarName(armIndex + ' | ' + index);
+	
+	// Generar y establecer datos de estrella.
+	setSelectedStarData(generateStarData(armIndex, index, true));
 }
 
 /**
@@ -1030,15 +1074,15 @@ export function setHoveredStar(value) {
 }
 
 /**
-  * Settter hoveredStarName.
+  * Settter hoveredStarData.
   *
   * @param value el nuevo valor.
   */
-export function setHoveredStarName(value) {
-	hoveredStarName = value;
+export function setHoveredStarData(value) {
+	hoveredStarData = structuredClone(value);
 	
 	// Actualizar estado de la UI.
-	galaxyControlUi.starHoveredBox.querySelector('span.star-name').textContent = hoveredStarName;
+	galaxyControlUi.starHoveredBox.querySelector('span.star-name').textContent = hoveredStarData.name;
 }
 
 /**
@@ -1060,15 +1104,48 @@ export function setSelectedStar(value) {
 }
 
 /**
-  * Settter selectedStarName.
+  * Settter selectedStarData.
   *
   * @param value el nuevo valor.
   */
-export function setSelectedStarName(value) {
-	selectedStarName = value;
+export function setSelectedStarData(value) {
+	selectedStarData = structuredClone(value);
 	
 	// Actualizar estado de la UI.
-	galaxyControlUi.starSelectedBox.querySelector('span.star-name').textContent = selectedStarName;
+	galaxyControlUi.starSelectedBox.querySelector('span.star-name').textContent = selectedStarData.name;
+	
+	let starPlanetsBox = galaxyControlUi.starSelectedBox.querySelector('div.star-planets');
+	starPlanetsBox.innerHTML = ''; // Vaciar contenido.
+	for (let i = 0; i < starSystem.MAX_PLANETS; ++i) {
+		if (selectedStarData.planets[i].visible) {
+			// Elemento base.
+			let div = document.createElement('div');
+			switch (selectedStarData.planets[i].terraformLevel) {
+				case 0:
+					div.style.color = '#F77';
+				break;
+				case 1:
+					div.style.color = '#77F';
+				break;
+				case 2:
+					div.style.color = '#7F7';
+				break;
+			}
+			
+			let icon = document.createElement('i');
+			icon.classList.add('bi', 'bi-globe2');
+			
+			let text = document.createElement('node');
+			text.textContent = ' ' + selectedStarData.planets[i].name;
+			
+			// Añadir sub elementos a elemento base.
+			div.appendChild(icon);
+			div.appendChild(text);
+			
+			// Añadir element base.
+			starPlanetsBox.appendChild(div);
+		}
+	}
 }
 
 /**

@@ -37,31 +37,40 @@ function initDomUi() {
 	// Caja para ver estrella.
 	starHoveredBox = domUi.createElement(`
 		<div class="box-arrow">
-			<div style="color: white;">
-				<span class="box-title">
-					<i class="bi bi-stars"></i>
-					<span class="star-name"></span>
-				</span>
-			</div>
+			<span class="box-title">
+				<i class="bi bi-stars"></i>
+				<span class="star-name"></span>
+			</span>
 		</div>
 	`);
 	elements.push(starHoveredBox);
 	
 	// Caja para viajar a estrella.
 	starSelectedBox = domUi.createElement(`
-		<div class="box-arrow">
-			<div style="color: white;">
-				<span class="box-title">
-					<i class="bi bi-stars"></i>
-					<span class="star-name"></span>
-				</span>
-				<button class="game goto-star">Go</button>
+		<div class="box-arrow" style="width: 100%;">
+			<div style="display: flex; align-items: center">
+				<div style="flex: 1; flex-grow: 2; padding-right: 10px;">
+					<span class="box-title">
+						<i class="bi bi-stars"></i>
+						<span class="star-name"></span>
+					</span>
+				</div>
+				<div style="flex: 1; text-align: right;">
+					<button class="game goto-star"><i class="bi bi-arrow-up-right"></i></button>
+				</div>
+			</div>
+			<hr>
+			<div class="star-planets box-content">
+				<div style="color: #F77"><i class="bi bi-globe2"></i> Planet 1</div>
+				<div style="color: #7F7"><i class="bi bi-globe2"></i> Planet 2</div>
+				<div style="color: #77F"><i class="bi bi-globe2"></i> Planet 3</div>
+				<div style="color: #77F"><i class="bi bi-globe2"></i> Planet 4</div>
 			</div>
 		</div>
 	`);
 	elements.push(starSelectedBox);
 	starSelectedBox.querySelector('button.goto-star').onclick = function() {
-		game.gotoStarSystemSave(galaxy.starData[galaxyControl.selectedArm][galaxyControl.selectedStar]);
+		game.gotoStarSystemSave(galaxyControl.generateStarData(galaxyControl.selectedArm, galaxyControl.selectedStar));
 	}
 }
 
@@ -98,17 +107,19 @@ export function displayStarHoveredBox() {
 	
 	domUi.displayElement(
 		starHoveredBox,
-		coords.x + 32 + 'px',
-		coords.y + 'px',
+		(Math.round(coords.x) + 32) + 'px',
+		Math.round(coords.y) + 'px',
 		10
 	);
+	domUi.setAnimation(starHoveredBox, 'fadeInRight', '0.2s');
 }
 
 /**
   * Función para refactorizar el dejar de mostrar starHoveredBox.
   */
 export function hideStarHoveredBox() {
-	domUi.hideElement(starHoveredBox);
+	domUi.setAnimation(starHoveredBox, 'fadeOutRight', '0.2s');
+	domUi.hideElement(starHoveredBox, 0.2);
 }
 
 /**
@@ -120,17 +131,19 @@ export function displayStarSelectedBox() {
 	
 	domUi.displayElement(
 		starSelectedBox,
-		coords.x + 32 + 'px',
-		coords.y + 'px',
+		(Math.round(coords.x) + 32) + 'px',
+		Math.round(coords.y) + 'px',
 		9
 	);
+	domUi.setAnimation(starSelectedBox, 'fadeInRight', '0.2s');
 }
 
 /**
   * Función para refactorizar el dejar de mostrar starSelectedBox.
   */
 export function hideStarSelectedBox() {
-	domUi.hideElement(starSelectedBox);
+	domUi.setAnimation(starSelectedBox, 'fadeOutRight', '0.2s');
+	domUi.hideElement(starSelectedBox, 0.2);
 }
 
 /**
@@ -138,7 +151,7 @@ export function hideStarSelectedBox() {
   */
 export function cameraOnUpdate() {
 	// Solo actualizar si se ha de mostrar la UI.
-	//if (displayUi) {
+	if (displayUi) {
 		// Actualizar hover.
 		if (galaxyControl.hoveredStar != -1) {
 			displayStarHoveredBox();
@@ -148,5 +161,5 @@ export function cameraOnUpdate() {
 		if (galaxyControl.selectedStar != -1) {
 			displayStarSelectedBox();
 		}
-	//}
+	}
 }

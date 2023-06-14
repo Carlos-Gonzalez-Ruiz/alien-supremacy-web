@@ -49,6 +49,13 @@
 		
 		<!-- Iconos Bootstrap (https://icons.getbootstrap.com/) -->
 		<link rel="stylesheet" type="text/css" href="css/bootstrap-icons-1.10.4/font/bootstrap-icons.css">
+		
+		<!-- Pregunar al usuario antes de salir. -->
+		<script>
+			window.onbeforeunload = function(e) {
+				return 'Dialog text here.';
+			};
+		</script>
 	</head>
 	<body>
 		<canvas id="graphics">Tu navegador web no soporta Canvas + WebGL</canvas>

@@ -16,7 +16,7 @@ const VOCALS = [ 'A', 'E', 'I', 'O', 'U', 'Y' ];
 /** Cadena de consonantes. */
 const CONSONANTS = [ 'B', 'C', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'X', 'Y', 'Z' ];
 /** Cadena de consonantes dobles. */
-const DOUBLE_CONSONANTS = ['SH', 'CR', 'DR', 'GR', 'KR', 'PR', 'QU', 'FR', 'BR']
+const DOUBLE_CONSONANTS = ['SH', 'CR', 'DR', 'GR', 'KR', 'PR', 'QU', 'FR', 'BR', 'CH', 'GL', 'KR', 'FL', 'CL', 'BL', 'GU', 'VL']
 
 /**
   * Función que devuelve un nombre generado aleatoriamente, sin especificar semilla.
@@ -49,6 +49,30 @@ export function generate() {
 			name += '-' + Math.floor(1 + random.get() * 10);
 		}
 	}
+	
+	return name;
+}
+
+/**
+  * Función que devuelve un nombre generado aleatoriamente, sin especificar semilla, sin añadir númeración.
+  *
+  * @return el nombre generado aleatoriamente.
+  */
+export function generateWithouthNumber() {
+	let name = '';
+	
+	// Generar nombre.
+	let length = MIN_LENGTH + random.get() * (MAX_LENGTH - MIN_LENGTH);
+	for (let i = 0; i < length; ++i) {
+		if (getRandomBool()) {
+			name += (getRandomBool() ? getConsonant() : getDoubleConsonant()) + getVocal();
+		} else {
+			name += getVocal() + getConsonant();
+		}
+	}
+	
+	// Capitalizar nombre.
+	name = name[0] + name.toLowerCase().slice(1);
 	
 	return name;
 }

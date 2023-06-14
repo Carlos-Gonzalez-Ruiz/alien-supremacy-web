@@ -137,9 +137,6 @@ export function hideAboutBox() {
 	let time = gameMenuUi.MENU_SECTION_ANIMATION_TIME_END; // Tiempo en segundos.
 	
 	domUi.setAnimation(aboutBox, 'fadeOutRight', time + 's');
-	// Esconder tras un tiempo.
-	setTimeout(function() {
-		domUi.hideElement(aboutBox);
-	}, time * 1000);
+	domUi.hideElement(aboutBox, time); // Esconder tras un tiempo.
 }
 
